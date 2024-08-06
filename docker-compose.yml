@@ -1,0 +1,50 @@
+version: "3.5"
+
+services:
+  db:
+    container_name: k3tog-postgres_container
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+      - ${PWD}/resources/dev_initdb/:/docker-entrypoint-initdb.d/
+    expose:
+      - "5432"
+    ports:
+      - "${DB_PORT:-15432}:5432"
+    networks:
+      - postgres-network
+    restart: always
+
+  pgadmin:
+    container_name: k3tog-pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@k3tog.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+      - ${PWD}/resources/pgAdmin/servers.json:/pgadmin4/servers.json
+      - ${PWD}/resources/pgAdmin/pgpass:/pgadmin4/pgpass
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    networks:
+      - postgres-network
+    restart: always 
+    entrypoint: 
+      - "/bin/sh"
+      - "-c"
+      - "/bin/echo 'db:5432:*:k3tog_api_user:password' > /tmp/pgpassfile && chmod 600 /tmp/pgpassfile && /entrypoint.sh"
+
+networks:
+  postgres-network:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:

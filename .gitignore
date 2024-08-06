@@ -105,18 +105,12 @@ cython_debug/
 # FastAPI specific
 *.log
 *.env
-*.ini
 
 # IDEs and editors
 .vscode/
 .idea/
 *.sublime-project
 *.sublime-workspace
-
-# Docker
-Dockerfile
-docker-compose.yml
-.dockerignore
 
 # System files
 .DS_Store
