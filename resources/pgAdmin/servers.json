@@ -1,0 +1,14 @@
+{
+    "Servers": {
+        "test": {
+            "Name": "k3tog-local-db",
+            "Group": "Servers",
+            "Port": "5432",
+            "Username": "k3tog_api_user",
+            "Host": "db",
+            "MaintenanceDB": "k3tog_dev_db",
+            "SSLMode": "prefer",
+            "PassFile": "/tmp/pgpassfile"
+        }
+    }
+}
