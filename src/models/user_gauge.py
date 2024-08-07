@@ -42,4 +42,5 @@ class UserGauge(Base):
     )
 
     def __repr__(self):
+        self.projects
         return f"UesrGauge(id={self.id!r}, stitches={self.stitches!r}, rows={self.rows!r}, after_wash={self.after_wash!r}, note={self.note!r}, created_ts={self.created_ts!r}, updated_ts={self.updated_ts!r}, deleted_ts={self.deleted_ts!r}, needle_id={self.needle_id!r}, yarn_id={self.yarn_id!r})"
