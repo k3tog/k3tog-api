@@ -53,3 +53,10 @@ class User(Base):
     )
     # relationship to the user_yarn table
     user_yarns = relationship("UserYarn", backref="user", cascade="all, delete-orphan")
+    # relationship to the user_gauge table
+    user_gauges = relationship(
+        "UserGauge", backref="user", cascade="all, delete-orphan"
+    )
+
+    def __repr__(self):
+        return f"User(id={self.id!r}, external_id={self.external_id!r}, username={self.username!r}, email={self.email!r}, location_state={self.location_state!r}, location_country={self.location_country!r}, birthday={self.birthday!r}, knitting_since={self.knitting_since!r}, bio={self.bio!r}, avatar_url={self.avatar_url!r}, created_ts={self.created_ts!r}, updated_ts={self.updated_ts!r}, deactivated_ts={self.deactivated_ts!r}, preferred_language_id={self.preferred_language_id!r})"

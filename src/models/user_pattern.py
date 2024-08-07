@@ -27,3 +27,6 @@ class UserPattern(Base):
     deleted_ts = Column(DateTime, nullable=True)
 
     user_id = Column(BigInteger, ForeignKey(User.id), nullable=False)
+
+    def __repr__(self):
+        return f"UserPattern(id={self.id!r}, name={self.name!r}, author={self.author!r}, file_attachment={self.file_attachment!r}, created_ts={self.created_ts!r}, updated_ts={self.updated_ts!r}, deleted_ts={self.deleted_ts!r}, user_id={self.user_id!r})"

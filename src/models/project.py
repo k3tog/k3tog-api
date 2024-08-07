@@ -13,7 +13,7 @@ from sqlalchemy.orm import relationship, backref
 from db.database import Base
 from models.user import User
 from models.user_pattern import UserPattern
-from models.assoc_tables import project_needle, project_yarn
+from models.assoc_tables import project_needle, project_yarn, project_gauge
 
 
 logger = logging.getLogger(__name__)
@@ -48,3 +48,10 @@ class Project(Base):
     user_yarns = relationship(
         "UserYarn", secondary=project_yarn, back_populates="projects"
     )
+    # many to many relationship to the user_gauge table
+    user_gauges = relationship(
+        "UserGauge", secondary=project_gauge, back_populates="projects"
+    )
+
+    def __repr__(self):
+        return f"Project(id={self.id!r}, title={self.title!r}, status={self.status!r}, co_date={self.co_date!r}, fo_date={self.fo_date!r}, size={self.size!r}, note={self.note!r}, created_ts={self.created_ts!r}, updated_ts={self.updated_ts!r}, deleted_ts={self.deleted_ts!r}, pattern_id={self.pattern_id!r}, user_id={self.user_id!r})"

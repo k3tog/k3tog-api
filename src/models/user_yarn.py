@@ -37,14 +37,5 @@ class UserYarn(Base):
         "Project", secondary=project_yarn, back_populates="user_yarns"
     )
 
-
-#     My Yarn
-# yarn_id	integer	PK
-# name	varchar
-# color	varchar
-# note	varchar
-# num_used	float
-# created_ts	datetime
-# updated_ts	datetime
-# deleted_ts	datetime
-# user_id	integer	FK
+    def __repr__(self):
+        return f"UserYarn(id={self.id!r}, name={self.name!r}, color={self.color!r}, note={self.note!r}, num_used={self.num_used!r}, created_ts={self.created_ts!r}, updated_ts={self.updated_ts!r}, deleted_ts={self.deleted_ts!r}, user_id={self.user_id!r})"
