@@ -9,7 +9,6 @@ from sqlalchemy import (
     String,
     Text,
     func,
-    Float,
 )
 from sqlalchemy.orm import relationship, backref
 from db.database import Base

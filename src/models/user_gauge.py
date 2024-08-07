@@ -9,7 +9,6 @@ from sqlalchemy import (
     ForeignKey,
     Text,
     func,
-    Integer,
 )
 from sqlalchemy.orm import relationship
 from db.database import Base

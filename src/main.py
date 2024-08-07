@@ -1,7 +1,7 @@
 import logging
 
 import click
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from rich.logging import RichHandler
 
