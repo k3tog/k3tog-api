@@ -34,9 +34,14 @@ class User(Base):
     created_ts = Column(DateTime, nullable=False, server_default=func.now())
     updated_ts = Column(DateTime, nullable=True, onupdate=func.now())
     deactivated_ts = Column(DateTime, nullable=True)
+
     preferred_language_id = Column(BigInteger, ForeignKey(Language.id), nullable=False)
 
-    # relationship with language table
+    # relationship to the language table
     preferred_language = relationship(
         "Language", backref=backref("users", lazy="dynamic")
     )
+    # relationship to the project table
+    projects = relationship("Project", backref="user", cascade="all, delete-orphan")
+    # relationship to the user_pattern table
+    patterns = relationship("UserPattern", backref="user", cascade="all, delete-orphan")
