@@ -7,13 +7,11 @@ from sqlalchemy import (
     DateTime,
     Float,
     ForeignKey,
-    String,
     Text,
     func,
 )
 from sqlalchemy.orm import relationship
 from db.database import Base
-from models.user import User
 from models.assoc_tables import project_gauge
 from src.models.user_needle import UserNeedle
 from src.models.user_yarn import UserYarn

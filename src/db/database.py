@@ -1,7 +1,6 @@
 import ast
 import logging
 import os
-import psycopg2
 
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
