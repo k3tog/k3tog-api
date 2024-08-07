@@ -42,7 +42,7 @@ jobs:
       
       # run flake8 linter
       - name: Run flake8
-        uses: k3tog/flake8-action@v2.0.2
+        uses: k3tog/flake8-action@main
         with:
           checkName: "Python Lint"
           path: .
