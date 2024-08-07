@@ -4,6 +4,7 @@ from sqlalchemy import (
     BigInteger,
     Column,
     DateTime,
+    Float,
     ForeignKey,
     String,
     Text,
@@ -12,19 +13,19 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 from db.database import Base
 from models.user import User
-from models.assoc_tables import project_needle
-
+from models.assoc_tables import project_yarn
 
 logger = logging.getLogger(__name__)
 
 
-class UserNeedle(Base):
-    __tablename__ = "user_needle"
+class UserYarn(Base):
+    __tablename__ = "user_yarn"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     name = Column(String(300), nullable=False)
-    size = Column(String(100), nullable=True)
+    color = Column(String(100), nullable=True)
     note = Column(Text, nullable=True)
+    num_used = Column(Float, nullable=True)
     created_ts = Column(DateTime, nullable=False, server_default=func.now())
     updated_ts = Column(DateTime, nullable=True, onupdate=func.now())
     deleted_ts = Column(DateTime, nullable=True)
@@ -33,5 +34,17 @@ class UserNeedle(Base):
 
     # many-to-many relationship to the project table
     projects = relationship(
-        "Project", secondary=project_needle, back_populates="user_needles"
+        "Project", secondary=project_yarn, back_populates="user_yarns"
     )
+
+
+#     My Yarn
+# yarn_id	integer	PK
+# name	varchar
+# color	varchar
+# note	varchar
+# num_used	float
+# created_ts	datetime
+# updated_ts	datetime
+# deleted_ts	datetime
+# user_id	integer	FK

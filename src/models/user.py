@@ -44,4 +44,12 @@ class User(Base):
     # relationship to the project table
     projects = relationship("Project", backref="user", cascade="all, delete-orphan")
     # relationship to the user_pattern table
-    patterns = relationship("UserPattern", backref="user", cascade="all, delete-orphan")
+    user_patterns = relationship(
+        "UserPattern", backref="user", cascade="all, delete-orphan"
+    )
+    # relationship to the user_needle table
+    user_needles = relationship(
+        "UserNeedle", backref="user", cascade="all, delete-orphan"
+    )
+    # relationship to the user_yarn table
+    user_yarns = relationship("UserYarn", backref="user", cascade="all, delete-orphan")
