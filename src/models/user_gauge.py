@@ -7,13 +7,12 @@ from sqlalchemy import (
     DateTime,
     Float,
     ForeignKey,
-    String,
     Text,
     func,
+    Integer,
 )
 from sqlalchemy.orm import relationship
 from db.database import Base
-from models.user import User
 from models.assoc_tables import project_gauge
 from src.models.user_needle import UserNeedle
 from src.models.user_yarn import UserYarn
@@ -42,5 +41,4 @@ class UserGauge(Base):
     )
 
     def __repr__(self):
-        self.projects
         return f"UesrGauge(id={self.id!r}, stitches={self.stitches!r}, rows={self.rows!r}, after_wash={self.after_wash!r}, note={self.note!r}, created_ts={self.created_ts!r}, updated_ts={self.updated_ts!r}, deleted_ts={self.deleted_ts!r}, needle_id={self.needle_id!r}, yarn_id={self.yarn_id!r})"
