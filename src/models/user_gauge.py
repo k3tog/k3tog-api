@@ -13,8 +13,9 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 from db.database import Base
 from models.assoc_tables import project_gauge
-from src.models.user_needle import UserNeedle
-from src.models.user_yarn import UserYarn
+from models.user import User
+from models.user_needle import UserNeedle
+from models.user_yarn import UserYarn
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +24,7 @@ class UserGauge(Base):
     __tablename__ = "user_gauge"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    stitches = Column(Float, nullable=False)
+    stitches = Column(Float, nullable=True)
     rows = Column(Float, nullable=True)
     after_wash = Column(Boolean, nullable=True)
     note = Column(Text, nullable=True)
@@ -33,6 +34,7 @@ class UserGauge(Base):
 
     needle_id = Column(BigInteger, ForeignKey(UserNeedle.id), nullable=True)
     yarn_id = Column(BigInteger, ForeignKey(UserYarn.id), nullable=True)
+    user_id = Column(BigInteger, ForeignKey(User.id), nullable=False)
 
     # many-to-many relationship to the project table
     projects = relationship(

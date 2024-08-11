@@ -19,7 +19,7 @@ project_yarn = Table(
     "project_yarn",
     Base.metadata,
     Column("project_id", BigInteger, ForeignKey("project.id"), primary_key=True),
-    Column("needle_id", BigInteger, ForeignKey("user_yarn.id"), primary_key=True),
+    Column("yarn_id", BigInteger, ForeignKey("user_yarn.id"), primary_key=True),
     Column("created_ts", DateTime, server_default=func.now()),
     Column("updated_ts", DateTime, onupdate=func.now()),
 )
