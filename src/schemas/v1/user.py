@@ -1,5 +1,4 @@
-from typing import List, Optional, PositiveInt
-from datetime import date
+from typing import Optional, PositiveInt
 
 from pydantic import BaseModel
 

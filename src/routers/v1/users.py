@@ -22,7 +22,7 @@ router = APIRouter()
     response_model_exclude_none=True,
 )
 async def get_users():
-    with get_db_session() as session:
+    with get_db_session() as _:
         # fetch all users
         pass
 
