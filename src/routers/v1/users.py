@@ -1,7 +1,7 @@
 import logging
 
 from typing import Annotated, List
-from fastapi import APIRouter, Depends, HTTPException, Path, Query, status
+from fastapi import APIRouter, Path, status
 
 from routers.utils import APITags
 from schemas.v1.user import UserCreateRequestInfoV1, UserV1
