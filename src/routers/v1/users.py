@@ -19,7 +19,7 @@ router = APIRouter()
 
 # `GET /v1/users/`
 @router.get(
-    "/users/",
+    "/v1/users/",
     tags=[APITags.users],
     description="Get a list of users",
     response_model=List[UserV1],
@@ -41,7 +41,7 @@ async def get_users():
 
 # `GET /v1/users/{username}`
 @router.get(
-    "/users/{username}",
+    "/v1/users/{username}",
     tags=[APITags.users],
     description="Get a single user using username",
     response_model=UserV1,
@@ -60,7 +60,7 @@ async def get_user(username: Annotated[str, Path(title="Username of the user to 
 
 # `POST /v1/users/`
 @router.post(
-    "/users/",
+    "/v1/users/",
     status_code=status.HTTP_201_CREATED,
     tags=[APITags.users],
     description="Create a single user",
@@ -117,7 +117,7 @@ async def create_user(user_create_req: UserCreateRequestInfoV1):
 
 # `PUT /v1/users/{user_id}`
 @router.put(
-    "/users/{user_id}",
+    "/v1/users/{user_id}",
     tags=[APITags.users],
     description="Update a single user",
     response_model=UserV1,

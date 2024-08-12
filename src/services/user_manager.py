@@ -3,7 +3,7 @@ import logging
 from schemas.v1.user import UserV1
 from services.utils import convert_datetime_to_unixtime
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 
 class UserManager:
