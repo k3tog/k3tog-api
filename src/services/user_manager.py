@@ -3,11 +3,11 @@ import logging
 from schemas.v1.user import UserV1
 from services.utils import convert_datetime_to_unixtime
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 
 class UserManager:
-    def convert_user_to_user_v1(self, user):
+    def convert_user_to_user_v1(self, user) -> UserV1:
         location_str = f"{user.location_state}, {user.location_country}"
 
         return UserV1(

@@ -8,6 +8,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history so we can push changes
+          ref: ${{ github.head_ref }}  # Checkout the PR branch
 
       - name: Set up Python 3.10
         uses: actions/setup-python@v3
@@ -34,11 +37,13 @@ jobs:
         if: steps.action_black.outputs.is_formatted == 'true'
         run: |
           black .
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git config --global user.name 'mijeongireneban'
+          git config --global user.email 'mijeong.irene.ban@gmail.com'
           git add .
           git commit -m "Fixup: Format Python code with Black"
-          git push
+          git push origin HEAD:${{ github.head_ref }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       # run flake8 linter
       - name: Run flake8

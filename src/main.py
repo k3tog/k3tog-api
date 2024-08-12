@@ -5,7 +5,14 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from rich.logging import RichHandler
 
-from routers.v1 import users
+from routers.v1 import (
+    languages,
+    users,
+    projects,
+    user_patterns,
+    user_yarns,
+    user_needles,
+)
 from db.database import Base, get_engine
 
 # configure logger
@@ -28,7 +35,12 @@ app = FastAPI(
     openapi_url="/api/v1/openapi.json",
 )
 
+app.include_router(languages.router)
 app.include_router(users.router)
+app.include_router(projects.router)
+app.include_router(user_patterns.router)
+app.include_router(user_yarns.router)
+app.include_router(user_needles.router)
 
 # static list of origins
 origins = ["http://localhost:3000", "https://localhost:3000"]

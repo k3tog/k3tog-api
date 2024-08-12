@@ -9,6 +9,7 @@ from sqlalchemy import (
     func,
 )
 from db.database import Base
+from sqlalchemy.orm import Session
 from models.user import User
 
 
@@ -30,3 +31,23 @@ class UserPattern(Base):
 
     def __repr__(self):
         return f"UserPattern(id={self.id!r}, name={self.name!r}, author={self.author!r}, file_attachment={self.file_attachment!r}, created_ts={self.created_ts!r}, updated_ts={self.updated_ts!r}, deleted_ts={self.deleted_ts!r}, user_id={self.user_id!r})"
+
+    @staticmethod
+    def get_user_patterns_by_user_id(
+        session: Session, user_id: int, exclude_deleted=True
+    ):
+        q = session.query(UserPattern).filter_by(user_id=user_id)
+        if exclude_deleted:
+            q = q.filter(UserPattern.deleted_ts.is_(None))
+
+        return q.all()
+
+    @staticmethod
+    def get_user_pattern_by_pattern_id_user_id(
+        session: Session, pattern_id: int, user_id: int
+    ):
+        return (
+            session.query(UserPattern)
+            .filter_by(id=pattern_id, user_id=user_id)
+            .one_or_none()
+        )
