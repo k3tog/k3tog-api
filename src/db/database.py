@@ -27,8 +27,9 @@ def _get_db_config_dict():
 
 def get_connection_string():
     config_dict = _get_db_config_dict()
-    return "postgresql+psycopg2://{db_username}:{db_password}@{db_host}:{db_name}?options=-csearch_path={search_path}".format(
-        **config_dict
+    return (
+        "postgresql+psycopg2://{db_username}:{db_password}@{db_host}:{db_port}/{db_name}"
+        "?options=-csearch_path={search_path}".format(**config_dict)
     )
 
 

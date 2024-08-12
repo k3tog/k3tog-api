@@ -5,6 +5,7 @@ from sqlalchemy import (
     Column,
     String,
 )
+from sqlalchemy.orm import Session
 from db.database import Base
 
 
@@ -19,3 +20,11 @@ class Language(Base):
 
     def __repr__(self):
         return f"Language(id={self.id!r}, name={self.name!r})"
+
+    @staticmethod
+    def get_languages(session: Session):
+        return session.query(Language).order_by(Language.name).all()
+
+    @staticmethod
+    def get_language_by_name(session: Session, name: str) -> "Language":
+        return session.query(Language).filter_by(name=name).first()

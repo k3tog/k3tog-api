@@ -5,6 +5,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from rich.logging import RichHandler
 
+from routers.v1 import users
+from db.database import Base, get_engine
+
 # configure logger
 LOGLEVEL = "DEBUG"
 FORMAT = "%(message)s"
@@ -25,6 +28,8 @@ app = FastAPI(
     openapi_url="/api/v1/openapi.json",
 )
 
+app.include_router(users.router)
+
 # static list of origins
 origins = ["http://localhost:3000", "https://localhost:3000"]
 
@@ -35,3 +40,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+def load_db():
+    Base.metadata.bind = get_engine()
+
+
+if __name__ == "__main__":
+    load_db()

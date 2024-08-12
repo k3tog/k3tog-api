@@ -9,7 +9,6 @@ from sqlalchemy import (
     String,
     Text,
     func,
-    or_,
 )
 from sqlalchemy.orm import relationship, backref, Session
 from db.database import Base
