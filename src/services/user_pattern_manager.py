@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 class UserPatternManager:
 
-    def convert_user_pattern_to_user_pattern_v1(self, user_pattern):
+    def convert_user_pattern_to_user_pattern_v1(self, user_pattern) -> UserPatternV1:
         return UserPatternV1(
             id=user_pattern.id,
             name=user_pattern.name,

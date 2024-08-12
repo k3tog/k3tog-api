@@ -9,7 +9,7 @@ from sqlalchemy import (
     Text,
     func,
 )
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Session
 from db.database import Base
 from models.user import User
 from models.assoc_tables import project_needle
@@ -38,3 +38,23 @@ class UserNeedle(Base):
 
     def __repr__(self):
         return f"UserNeedle(id={self.id!r}, name={self.name!r}, size={self.size!r}, note={self.note!r}, created_ts={self.created_ts!r}, updated_ts={self.updated_ts!r}, deleted_ts={self.deleted_ts!r}, user_id={self.user_id!r})"
+
+    @staticmethod
+    def get_user_needles_by_user_id(
+        session: Session, user_id: int, exclude_deleted=True
+    ):
+        q = session.query(UserNeedle).filter_by(user_id=user_id)
+        if exclude_deleted:
+            q = q.filter(UserNeedle.deleted_ts.is_(None))
+
+        return q.all()
+
+    @staticmethod
+    def get_user_needle_by_needle_id_user_id(
+        session: Session, needle_id: int, user_id: int
+    ):
+        return (
+            session.query(UserNeedle)
+            .filter_by(id=needle_id, user_id=user_id)
+            .one_or_none()
+        )

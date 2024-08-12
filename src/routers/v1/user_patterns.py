@@ -8,7 +8,7 @@ from schemas.v1.user_pattern import UserPatternCreateRequestInfoV1, UserPatternV
 from db.database import get_db_session
 from models.user import User
 from models.user_pattern import UserPattern
-from src.services.user_pattern_manager import UserPatternManager
+from services.user_pattern_manager import UserPatternManager
 
 logger = logging.getLogger(__name__)
 

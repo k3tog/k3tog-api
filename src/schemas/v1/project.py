@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import List, Optional
 from datetime import datetime
 
 from pydantic import BaseModel
@@ -19,22 +19,23 @@ class ProjectV1(BaseModel):
     id: int
     title: str
     status: Optional[ProjectStatus] = ProjectStatus.NOT_STARTED
-    co_date: Optional[str]
-    fo_date: Optional[str]
-    pattern: Optional[UserPatternV1]
-    size: Optional[str]
-    yarn: Optional[UserYarnV1]
-    needle: Optional[UserNeedleV1]
-    note: Optional[str]
+    co_date: Optional[str] = None
+    fo_date: Optional[str] = None
+    pattern: Optional[UserPatternV1] = None
+    size: Optional[str] = None
+    yarns: Optional[List[UserYarnV1]] = []
+    needles: Optional[List[UserNeedleV1]] = []
+    note: Optional[str] = None
 
 
 class ProjectCreateRequestInfoV1(BaseModel):
     title: str
     status: Optional[ProjectStatus] = ProjectStatus.NOT_STARTED
-    co_date: Optional[datetime]
-    fo_date: Optional[datetime]
+    co_date: Optional[str]  # "YYYY-MM-DD"
+    fo_date: Optional[str]  # "YYYY-MM-DD"
+    # TODO(irene): for patter, yarns, needles, if selected ones that already exist - just get pattern_id, yarn_id, needle_id.
     pattern: Optional[UserPatternCreateRequestInfoV1]
     size: Optional[str]
-    yarn: Optional[UserYarnCreateRequestInfoV1]
-    needle: Optional[UserNeedleCreateRequestInfoV1]
+    yarns: Optional[List[UserYarnCreateRequestInfoV1]] = []
+    needles: Optional[List[UserNeedleCreateRequestInfoV1]] = []
     note: Optional[str]

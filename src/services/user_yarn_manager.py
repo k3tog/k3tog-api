@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 class UserYarnManager:
 
-    def convert_user_yarn_to_user_yarn_v1(self, user_yarn):
+    def convert_user_yarn_to_user_yarn_v1(self, user_yarn) -> UserYarnV1:
         return UserYarnV1(
             id=user_yarn.id,
             name=user_yarn.name,

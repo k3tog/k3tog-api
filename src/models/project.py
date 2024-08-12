@@ -9,7 +9,7 @@ from sqlalchemy import (
     Text,
     func,
 )
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship, backref, Session
 from db.database import Base
 from models.user import User
 from models.user_pattern import UserPattern
@@ -55,3 +55,21 @@ class Project(Base):
 
     def __repr__(self):
         return f"Project(id={self.id!r}, title={self.title!r}, status={self.status!r}, co_date={self.co_date!r}, fo_date={self.fo_date!r}, size={self.size!r}, note={self.note!r}, created_ts={self.created_ts!r}, updated_ts={self.updated_ts!r}, deleted_ts={self.deleted_ts!r}, pattern_id={self.pattern_id!r}, user_id={self.user_id!r})"
+
+    @staticmethod
+    def get_projects_by_user_id(session: Session, user_id: int, exclude_deleted=True):
+        q = session.query(Project).filter_by(user_id=user_id)
+        if exclude_deleted:
+            q = q.filter(Project.deleted_ts.is_(None))
+
+        return q.all()
+
+    @staticmethod
+    def get_project_by_project_id_user_id(
+        session: Session, project_id: int, user_id: int
+    ):
+        return (
+            session.query(Project)
+            .filter_by(id=project_id, user_id=user_id)
+            .one_or_none()
+        )

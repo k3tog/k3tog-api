@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 class UserManager:
-    def convert_user_to_user_v1(self, user):
+    def convert_user_to_user_v1(self, user) -> UserV1:
         location_str = f"{user.location_state}, {user.location_country}"
 
         return UserV1(

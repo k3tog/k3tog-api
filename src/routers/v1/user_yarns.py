@@ -8,7 +8,7 @@ from db.database import get_db_session
 from models.user import User
 from schemas.v1.user_yarn import UserYarnCreateRequestInfoV1, UserYarnV1
 from models.user_yarn import UserYarn
-from src.services.user_yarn_manager import UserYarnManager
+from services.user_yarn_manager import UserYarnManager
 
 logger = logging.getLogger(__name__)
 
