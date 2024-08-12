@@ -3,7 +3,7 @@
 
 CREATE TABLE IF NOT EXISTS k3tog."language"
 (
-    id BIGINT NOT NULL,
+    id BIGSERIAL NOT NULL,
     name VARCHAR(50) NOT NULL,
     CONSTRAINT laugnage_pkey PRIMARY KEY (id)
 )
@@ -12,7 +12,7 @@ TABLESPACE pg_default;
 
 CREATE TABLE IF NOT EXISTS k3tog."user"
 (
-    id BIGINT NOT NULL,
+    id BIGSERIAL NOT NULL,
     external_id VARCHAR(50) UNIQUE,
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS k3tog."user"
     created_ts TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_ts TIMESTAMP WITH TIME ZONE,
     deactivated_ts TIMESTAMP WITH TIME ZONE,
-    preferred_language_id BIGINT NOT NULL,
+    preferred_language_id BIGSERIAL NOT NULL,
     CONSTRAINT user_pkey PRIMARY KEY (id)
 )
 TABLESPACE pg_default;
@@ -33,7 +33,7 @@ TABLESPACE pg_default;
 
 CREATE TABLE IF NOT EXISTS k3tog."project"
 (
-    id BIGINT NOT NULL,
+    id BIGSERIAL NOT NULL,
     title VARCHAR(100) NOT NULL,
     status VARCHAR(50),
     co_date TIMESTAMP WITH TIME ZONE,
@@ -43,8 +43,8 @@ CREATE TABLE IF NOT EXISTS k3tog."project"
     created_ts TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_ts TIMESTAMP WITH TIME ZONE,
     deleted_ts TIMESTAMP WITH TIME ZONE,
-    pattern_id BIGINT NOT NULL,
-    user_id BIGINT NOT NULL,
+    pattern_id BIGSERIAL NOT NULL,
+    user_id BIGSERIAL NOT NULL,
     CONSTRAINT project_pkey PRIMARY KEY (id)
 )
 TABLESPACE pg_default;
@@ -52,14 +52,14 @@ TABLESPACE pg_default;
 
 CREATE TABLE IF NOT EXISTS k3tog."user_pattern"
 (
-    id BIGINT NOT NULL,
+    id BIGSERIAL NOT NULL,
     name VARCHAR(500) NOT NULL,
     author VARCHAR(100),
     file_attachment VARCHAR(500),
     created_ts TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_ts TIMESTAMP WITH TIME ZONE,
     deleted_ts TIMESTAMP WITH TIME ZONE,
-    user_id BIGINT NOT NULL,
+    user_id BIGSERIAL NOT NULL,
     CONSTRAINT user_pattern_pkey PRIMARY KEY (id)
 )
 TABLESPACE pg_default;
@@ -67,7 +67,7 @@ TABLESPACE pg_default;
 
 CREATE TABLE IF NOT EXISTS k3tog."user_yarn"
 (
-    id BIGINT NOT NULL,
+    id BIGSERIAL NOT NULL,
     name VARCHAR(100) NOT NULL,
     color VARCHAR(100),
     note TEXT,
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS k3tog."user_yarn"
     created_ts TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_ts TIMESTAMP WITH TIME ZONE,
     deleted_ts TIMESTAMP WITH TIME ZONE,
-    user_id BIGINT NOT NULL,
+    user_id BIGSERIAL NOT NULL,
     CONSTRAINT user_yarn_pkey PRIMARY KEY (id)
 )
 TABLESPACE pg_default;
@@ -83,14 +83,14 @@ TABLESPACE pg_default;
 
 CREATE TABLE IF NOT EXISTS k3tog."user_needle"
 (
-    id BIGINT NOT NULL,
+    id BIGSERIAL NOT NULL,
     name VARCHAR(300) NOT NULL,
     size VARCHAR(100),
     note TEXT,
     created_ts TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_ts TIMESTAMP WITH TIME ZONE,
     deleted_ts TIMESTAMP WITH TIME ZONE,
-    user_id BIGINT NOT NULL,
+    user_id BIGSERIAL NOT NULL,
     CONSTRAINT user_needle_pkey PRIMARY KEY (id)
 )
 TABLESPACE pg_default;
@@ -98,7 +98,7 @@ TABLESPACE pg_default;
 
 CREATE TABLE IF NOT EXISTS k3tog."user_gauge"
 (
-    id BIGINT NOT NULL,
+    id BIGSERIAL NOT NULL,
     stitches FLOAT,
     rows FLOAT,
     after_wash BOOLEAN,
@@ -106,9 +106,9 @@ CREATE TABLE IF NOT EXISTS k3tog."user_gauge"
     created_ts TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_ts TIMESTAMP WITH TIME ZONE,
     deleted_ts TIMESTAMP WITH TIME ZONE,
-    user_id BIGINT NOT NULL,
-    yarn_id BIGINT NOT NULL,
-    needle_id BIGINT NOT NULL,
+    user_id BIGSERIAL NOT NULL,
+    yarn_id BIGSERIAL NOT NULL,
+    needle_id BIGSERIAL NOT NULL,
     CONSTRAINT user_gauge_pkey PRIMARY KEY (id)
 )
 TABLESPACE pg_default;
@@ -116,8 +116,8 @@ TABLESPACE pg_default;
 
 CREATE TABLE IF NOT EXISTS k3tog."project_needle"
 (
-    project_id BIGINT NOT NULL,
-    needle_id BIGINT NOT NULL,
+    project_id BIGSERIAL NOT NULL,
+    needle_id BIGSERIAL NOT NULL,
     created_ts TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_ts TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 )
@@ -126,8 +126,8 @@ TABLESPACE pg_default;
 
 CREATE TABLE IF NOT EXISTS k3tog."project_yarn"
 (
-    project_id BIGINT NOT NULL,
-    yarn_id BIGINT NOT NULL, 
+    project_id BIGSERIAL NOT NULL,
+    yarn_id BIGSERIAL NOT NULL, 
     created_ts TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_ts TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 )
@@ -136,8 +136,8 @@ TABLESPACE pg_default;
 
 CREATE TABLE IF NOT EXISTS k3tog."project_gauge"
 (
-    project_id BIGINT NOT NULL,
-    gauge_id BIGINT NOT NULL, 
+    project_id BIGSERIAL NOT NULL,
+    gauge_id BIGSERIAL NOT NULL, 
     created_ts TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_ts TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 )

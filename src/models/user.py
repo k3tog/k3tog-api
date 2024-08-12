@@ -10,7 +10,7 @@ from sqlalchemy import (
     Text,
     func,
 )
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship, backref, Session
 from db.database import Base
 from models.language import Language
 
@@ -60,3 +60,25 @@ class User(Base):
 
     def __repr__(self):
         return f"User(id={self.id!r}, external_id={self.external_id!r}, username={self.username!r}, email={self.email!r}, location_state={self.location_state!r}, location_country={self.location_country!r}, birthday={self.birthday!r}, knitting_since={self.knitting_since!r}, bio={self.bio!r}, avatar_url={self.avatar_url!r}, created_ts={self.created_ts!r}, updated_ts={self.updated_ts!r}, deactivated_ts={self.deactivated_ts!r}, preferred_language_id={self.preferred_language_id!r})"
+
+    @staticmethod
+    def get_users(session: Session):
+        return session.query(User).order_by(User.username).all()
+
+    @staticmethod
+    def get_user_by_username(session: Session, username: str) -> "User":
+        return (
+            session.query(User)
+            .filter_by(username=username.lower())
+            .order_by(User.username)
+            .first()
+        )
+
+    @staticmethod
+    def get_user_by_email(session: Session, email: str) -> "User":
+        return (
+            session.query(User)
+            .filter_by(email=email.lower())
+            .order_by(User.username)
+            .first()
+        )
