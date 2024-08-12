@@ -26,7 +26,7 @@ router = APIRouter()
 )
 async def get_user_patterns(
     username: Annotated[
-        str, Path(title="Username of the user to get a list of projects for")
+        str, Path(title="Username of the user to get a list of patterns for")
     ]
 ):
     with get_db_session() as session:
@@ -34,7 +34,7 @@ async def get_user_patterns(
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Unauthorized or invalid username",
+                detail="Invalid username",
             )
 
         # fetch all patterns that the user owns
@@ -42,16 +42,16 @@ async def get_user_patterns(
             session=session, user_id=user.id
         )
 
-        user_pattern_info = []
-        user_pattern_manager = UserPatternManager()
-        for user_pattern in user_patterns:
-            user_pattern_info.append(
-                user_pattern_manager.convert_user_pattern_to_user_pattern_v1(
-                    user_pattern=user_pattern
-                )
+    user_pattern_info = []
+    user_pattern_manager = UserPatternManager()
+    for user_pattern in user_patterns:
+        user_pattern_info.append(
+            user_pattern_manager.convert_user_pattern_to_user_pattern_v1(
+                user_pattern=user_pattern
             )
+        )
 
-        return user_pattern
+    return user_pattern_info
 
 
 # `GET /v1/users/{username}/patterns/{pattern_id}`
@@ -62,9 +62,32 @@ async def get_user_patterns(
     response_model=UserPatternV1,
     response_model_exclude_none=True,
 )
-async def get_user_pattern(username: Annotated[
-        str, Path(title="Username of the user to get a list of projects for")
-    ])
+async def get_user_pattern(
+    username: Annotated[
+        str, Path(title="Username of the user to get a list of patterns for")
+    ],
+    pattern_id: Annotated[int, Path(title="ID of the pattern")],
+):
+    with get_db_session() as session:
+        user = User.get_user_by_username(session=session, username=username)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid username",
+            )
+
+        user_pattern = UserPattern.get_user_pattern_by_pattern_id_user_id(
+            session=session, pattern_id=pattern_id, user_id=user.id
+        )
+
+    if user_pattern:
+        return UserPatternManager().convert_user_pattern_to_user_pattern_v1(
+            user_pattern=user_pattern
+        )
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND, detail="No pattern found"
+    )
 
 
 # `POST /v1/users/{username}/patterns/`
@@ -87,7 +110,7 @@ async def create_user_pattern(
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Unauthorized or invalid username",
+                detail="Invalid username",
             )
 
         user_pattern = UserPattern(
@@ -100,9 +123,9 @@ async def create_user_pattern(
         session.add(user_pattern)
         session.commit()
 
-        return UserPatternManager().convert_user_pattern_to_user_pattern_v1(
-            user_pattern=user_pattern
-        )
+    return UserPatternManager().convert_user_pattern_to_user_pattern_v1(
+        user_pattern=user_pattern
+    )
 
 
 # `PUT /v1/users/{username}/patterns/{pattern_id}`

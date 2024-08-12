@@ -41,3 +41,13 @@ class UserPattern(Base):
             q = q.filter(UserPattern.deleted_ts.is_(None))
 
         return q.all()
+
+    @staticmethod
+    def get_user_pattern_by_pattern_id_user_id(
+        session: Session, pattern_id: int, user_id: int
+    ):
+        return (
+            session.query(UserPattern)
+            .filter_by(id=pattern_id, user_id=user_id)
+            .one_or_none()
+        )
