@@ -123,9 +123,9 @@ async def create_user_pattern(
         session.add(user_pattern)
         session.commit()
 
-    return UserPatternManager().convert_user_pattern_to_user_pattern_v1(
-        user_pattern=user_pattern
-    )
+        return UserPatternManager().convert_user_pattern_to_user_pattern_v1(
+            user_pattern=user_pattern
+        )
 
 
 # `PUT /v1/users/{username}/patterns/{pattern_id}`

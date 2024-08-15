@@ -14,7 +14,7 @@ class UserYarnManager:
             id=user_yarn.id,
             name=user_yarn.name,
             color=user_yarn.color,
-            none=user_yarn.note,
+            note=user_yarn.note,
             num_used=user_yarn.num_used,
             created_ts=convert_datetime_to_unixtime(user_yarn.created_ts),
             updated_ts=convert_datetime_to_unixtime(user_yarn.updated_ts),

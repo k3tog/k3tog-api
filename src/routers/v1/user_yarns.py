@@ -117,7 +117,7 @@ async def create_user_yarn(
         session.add(user_yarn)
         session.commit()
 
-    return UserYarnManager().convert_user_yarn_to_user_yarn_v1(user_yarn=user_yarn)
+        return UserYarnManager().convert_user_yarn_to_user_yarn_v1(user_yarn=user_yarn)
 
 
 # `PUT /v1/users/{username}/yarns/{yarn_id}`
