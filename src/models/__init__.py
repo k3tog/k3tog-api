@@ -7,4 +7,3 @@ import models.user_needle
 import models.user_pattern
 import models.user_yarn
 import models.pattern_document
-

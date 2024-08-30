@@ -18,4 +18,3 @@ class UserPatternCreateRequestInfoV1(BaseModel):
     name: str
     author: Optional[str]
     description: Optional[str]
-

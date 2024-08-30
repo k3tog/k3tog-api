@@ -1,14 +1,6 @@
 import logging
 
-from sqlalchemy import (
-    BigInteger,
-    Column,
-    DateTime,
-    ForeignKey,
-    String,
-    func, 
-    Text
-)
+from sqlalchemy import BigInteger, Column, DateTime, ForeignKey, String, func, Text
 from db.database import Base
 from sqlalchemy.orm import Session, relationship
 from models.user import User
@@ -31,7 +23,9 @@ class UserPattern(Base):
     user_id = Column(BigInteger, ForeignKey(User.id), nullable=False)
 
     # relationship to the project table
-    pattern_documents = relationship("PatternDocument", backref="user_pattern", cascade="all, delete-orphan")
+    pattern_documents = relationship(
+        "PatternDocument", backref="user_pattern", cascade="all, delete-orphan"
+    )
 
     def __repr__(self):
         return f"UserPattern(id={self.id!r}, name={self.name!r}, author={self.author!r}, description={self.description!r}, created_ts={self.created_ts!r}, updated_ts={self.updated_ts!r}, deleted_ts={self.deleted_ts!r}, user_id={self.user_id!r})"

@@ -89,6 +89,7 @@ async def get_user_pattern(
         status_code=status.HTTP_404_NOT_FOUND, detail="No pattern found"
     )
 
+
 # `POST /v1/users/{username}/patterns/`
 @router.post(
     "/v1/users/{username}/patterns/",
@@ -120,7 +121,7 @@ async def create_user_pattern(
         )
 
         # TODO(irene): integrate supabase filestorage
-        # upload the pattern file if attached 
+        # upload the pattern file if attached
         # make pattern_document row and connect to this user_pattern
 
         session.add(user_pattern)
