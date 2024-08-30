@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS k3tog."user_pattern"
     id BIGSERIAL NOT NULL,
     name VARCHAR(500) NOT NULL,
     author VARCHAR(100),
-    file_attachment VARCHAR(500),
+    description TEXT,
     created_ts TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_ts TIMESTAMP WITH TIME ZONE,
     deleted_ts TIMESTAMP WITH TIME ZONE,

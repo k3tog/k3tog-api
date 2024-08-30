@@ -1,15 +1,8 @@
 import logging
 
-from sqlalchemy import (
-    BigInteger,
-    Column,
-    DateTime,
-    ForeignKey,
-    String,
-    func,
-)
+from sqlalchemy import BigInteger, Column, DateTime, ForeignKey, String, func, Text
 from db.database import Base
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, relationship
 from models.user import User
 
 
@@ -22,15 +15,20 @@ class UserPattern(Base):
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     name = Column(String(500), nullable=False)
     author = Column(String(100), nullable=True)
-    file_attachment = Column(String(500), nullable=True)
+    description = Column(Text, nullable=True)
     created_ts = Column(DateTime, nullable=False, server_default=func.now())
     updated_ts = Column(DateTime, nullable=True, onupdate=func.now())
     deleted_ts = Column(DateTime, nullable=True)
 
     user_id = Column(BigInteger, ForeignKey(User.id), nullable=False)
 
+    # relationship to the project table
+    pattern_documents = relationship(
+        "PatternDocument", backref="user_pattern", cascade="all, delete-orphan"
+    )
+
     def __repr__(self):
-        return f"UserPattern(id={self.id!r}, name={self.name!r}, author={self.author!r}, file_attachment={self.file_attachment!r}, created_ts={self.created_ts!r}, updated_ts={self.updated_ts!r}, deleted_ts={self.deleted_ts!r}, user_id={self.user_id!r})"
+        return f"UserPattern(id={self.id!r}, name={self.name!r}, author={self.author!r}, description={self.description!r}, created_ts={self.created_ts!r}, updated_ts={self.updated_ts!r}, deleted_ts={self.deleted_ts!r}, user_id={self.user_id!r})"
 
     @staticmethod
     def get_user_patterns_by_user_id(
