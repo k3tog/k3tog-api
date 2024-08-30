@@ -4,6 +4,12 @@
 #
 #    pip-compile --output-file=requirements.txt requirements.in
 #
+aiohappyeyeballs==2.4.0
+    # via aiohttp
+aiohttp==3.10.5
+    # via realtime
+aiosignal==1.3.1
+    # via aiohttp
 alembic==1.13.2
     # via -r requirements.in
 annotated-types==0.7.0
@@ -13,6 +19,10 @@ anyio==4.4.0
     #   httpx
     #   starlette
     #   watchfiles
+async-timeout==4.0.3
+    # via aiohttp
+attrs==24.2.0
+    # via aiohttp
 black==24.8.0
     # via -r requirements.in
 certifi==2024.7.4
@@ -26,6 +36,8 @@ click==8.1.7
     #   uvicorn
 config==0.5.1
     # via -r requirements.in
+deprecation==2.1.0
+    # via postgrest
 dnspython==2.6.1
     # via email-validator
 email-validator==2.2.0
@@ -40,21 +52,40 @@ fastapi-cli==0.0.5
     # via fastapi
 flake8==7.1.1
     # via -r requirements.in
+frozenlist==1.4.1
+    # via
+    #   aiohttp
+    #   aiosignal
+gotrue==2.7.0
+    # via supabase
 h11==0.14.0
     # via
     #   httpcore
     #   uvicorn
+h2==4.1.0
+    # via httpx
+hpack==4.0.0
+    # via h2
 httpcore==1.0.5
     # via httpx
 httptools==0.6.1
     # via uvicorn
-httpx==0.27.0
-    # via fastapi
+httpx[http2]==0.27.0
+    # via
+    #   fastapi
+    #   gotrue
+    #   postgrest
+    #   storage3
+    #   supabase
+    #   supafunc
+hyperframe==6.0.1
+    # via h2
 idna==3.7
     # via
     #   anyio
     #   email-validator
     #   httpx
+    #   yarl
 iniconfig==2.0.0
     # via pytest
 jinja2==3.1.4
@@ -71,11 +102,16 @@ mccabe==0.7.0
     # via flake8
 mdurl==0.1.2
     # via markdown-it-py
+multidict==6.0.5
+    # via
+    #   aiohttp
+    #   yarl
 mypy-extensions==1.0.0
     # via black
 packaging==24.1
     # via
     #   black
+    #   deprecation
     #   pytest
 pathspec==0.12.1
     # via black
@@ -83,12 +119,17 @@ platformdirs==4.2.2
     # via black
 pluggy==1.5.0
     # via pytest
+postgrest==0.16.11
+    # via supabase
 psycopg2-binary==2.9.9
     # via -r requirements.in
 pycodestyle==2.12.1
     # via flake8
 pydantic==2.8.2
-    # via fastapi
+    # via
+    #   fastapi
+    #   gotrue
+    #   postgrest
 pydantic-core==2.20.1
     # via pydantic
 pyflakes==3.2.0
@@ -97,18 +138,26 @@ pygments==2.18.0
     # via rich
 pytest==8.3.2
     # via -r requirements.in
+python-dateutil==2.9.0.post0
+    # via
+    #   realtime
+    #   storage3
 python-dotenv==1.0.1
     # via uvicorn
 python-multipart==0.0.9
     # via fastapi
 pyyaml==6.0.1
     # via uvicorn
+realtime==2.0.2
+    # via supabase
 rich==13.7.1
     # via
     #   -r requirements.in
     #   typer
 shellingham==1.5.4
     # via typer
+six==1.16.0
+    # via python-dateutil
 sniffio==1.3.1
     # via
     #   anyio
@@ -119,6 +168,14 @@ sqlalchemy==1.4.53
     #   alembic
 starlette==0.37.2
     # via fastapi
+storage3==0.7.7
+    # via supabase
+strenum==0.4.15
+    # via postgrest
+supabase==2.7.3
+    # via -r requirements.in
+supafunc==0.5.1
+    # via supabase
 tomli==2.0.1
     # via
     #   black
@@ -133,6 +190,8 @@ typing-extensions==4.12.2
     #   fastapi
     #   pydantic
     #   pydantic-core
+    #   realtime
+    #   storage3
     #   typer
     #   uvicorn
 uvicorn[standard]==0.30.5
@@ -145,4 +204,8 @@ uvloop==0.19.0
 watchfiles==0.22.0
     # via uvicorn
 websockets==12.0
-    # via uvicorn
+    # via
+    #   realtime
+    #   uvicorn
+yarl==1.9.4
+    # via aiohttp
