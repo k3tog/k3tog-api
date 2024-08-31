@@ -1,7 +1,7 @@
 from typing import List, Optional
 from pydantic import BaseModel
 
-from schemas.v1.pattern_document import PatternDocumentInfoV1
+from schemas.v1.pattern_document import PatternDocumentV1
 
 
 class UserPatternV1(BaseModel):
@@ -11,7 +11,7 @@ class UserPatternV1(BaseModel):
     description: Optional[str]
     created_ts: int
     updated_ts: int
-    pattern_documents: Optional[List[PatternDocumentInfoV1]]
+    pattern_documents: Optional[List[PatternDocumentV1]]
 
 
 class UserPatternCreateRequestInfoV1(BaseModel):

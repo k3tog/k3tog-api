@@ -1,3 +1,4 @@
+from datetime import datetime
 import logging
 
 from sqlalchemy import BigInteger, Column, DateTime, ForeignKey, String, func, Text
@@ -49,3 +50,21 @@ class UserPattern(Base):
             .filter_by(id=pattern_id, user_id=user_id)
             .one_or_none()
         )
+
+    @staticmethod
+    def delete_user_pattern_and_documents_by_pattern_id_user_id(
+        session: Session, pattern_id: int, user_id: int
+    ):
+        user_pattern = UserPattern.get_user_pattern_by_pattern_id_user_id(
+            session, pattern_id, user_id
+        )
+        if not user_pattern:
+            return None
+        # delete connected pattern documents
+        if user_pattern.pattern_documents:
+            for pattern_document in user_pattern.pattern_documents:
+                pattern_document.deleted_ts = datetime.now()
+                session.add(pattern_document)
+
+        user_pattern.deleted_ts = datetime.now()
+        return user_pattern
