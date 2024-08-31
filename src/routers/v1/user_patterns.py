@@ -96,6 +96,7 @@ async def get_user_pattern(
     )
 
 
+# `POST /v1/users/{username}/patterns/upload`
 @router.post(
     "/v1/users/{username}/patterns/upload",
     status_code=status.HTTP_201_CREATED,
