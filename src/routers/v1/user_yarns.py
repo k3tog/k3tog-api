@@ -2,7 +2,7 @@ import logging
 
 from typing import Annotated, List
 from fastapi import APIRouter, HTTPException, Path, status
-
+from psycopg2.extras import NumericRange
 from routers.utils import APITags
 from db.database import get_db_session
 from models.user import User
@@ -105,19 +105,28 @@ async def create_user_yarn(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid username",
             )
+        
+        # TODO(irene): implement api endpoint for uploading multiple photos and connect them to here
 
         user_yarn = UserYarn(
-            name=yarn_create_req.name,
+            yarn_name=yarn_create_req.yarn_name,
+            brand_name=yarn_create_req.brand_name,
             color=yarn_create_req.color,
+            needle_range=NumericRange(
+                yarn_create_req.needle_range_from, yarn_create_req.needle_range_to
+            ),
+            hook_range=NumericRange(
+                yarn_create_req.hook_range_from, yarn_create_req.hook_range_to
+            ),
+            weight=yarn_create_req.weight,
             note=yarn_create_req.note,
-            num_used=yarn_create_req.num_used,
             user_id=user.id,
         )
 
         session.add(user_yarn)
         session.commit()
 
-    return UserYarnManager().convert_user_yarn_to_user_yarn_v1(user_yarn=user_yarn)
+        return UserYarnManager().convert_user_yarn_to_user_yarn_v1(user_yarn=user_yarn)
 
 
 # `PUT /v1/users/{username}/yarns/{yarn_id}`

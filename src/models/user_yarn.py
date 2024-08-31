@@ -4,13 +4,14 @@ from sqlalchemy import (
     BigInteger,
     Column,
     DateTime,
-    Float,
     ForeignKey,
     String,
     Text,
     func,
+    Numeric,
 )
 from sqlalchemy.orm import relationship, Session
+from sqlalchemy.dialects.postgresql import NUMRANGE
 
 from db.database import Base
 from models.user import User
@@ -23,10 +24,13 @@ class UserYarn(Base):
     __tablename__ = "user_yarn"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    name = Column(String(300), nullable=False)
+    yarn_name = Column(String(300), nullable=False)
+    brand_name = Column(String(300), nullable=True)
     color = Column(String(100), nullable=True)
+    needle_range = Column(NUMRANGE, nullable=True)
+    hook_range = Column(NUMRANGE, nullable=True)
+    weight = Column(Numeric(7, 2), nullable=True)
     note = Column(Text, nullable=True)
-    num_used = Column(Float, nullable=True)
     created_ts = Column(DateTime, nullable=False, server_default=func.now())
     updated_ts = Column(DateTime, nullable=True, onupdate=func.now())
     deleted_ts = Column(DateTime, nullable=True)
@@ -38,8 +42,14 @@ class UserYarn(Base):
         "Project", secondary=project_yarn, back_populates="user_yarns"
     )
 
+    photos = relationship(
+        "Photo",
+        primaryjoin="and_(foreign(Photo.reference_id)==UserYarn.id, Photo.type=='user_yarn')",
+        back_populates="user_yarn",
+    )
+
     def __repr__(self):
-        return f"UserYarn(id={self.id!r}, name={self.name!r}, color={self.color!r}, note={self.note!r}, num_used={self.num_used!r}, created_ts={self.created_ts!r}, updated_ts={self.updated_ts!r}, deleted_ts={self.deleted_ts!r}, user_id={self.user_id!r})"
+        return f"UserYarn(id={self.id!r}, yarn_name={self.yarn_name!r}, brand_name={self.brand_name}, color={self.color!r}, needle_range={self.needle_range!r}, hook_range={self.hook_range!r}, weight={self.weight!r}, note={self.note!r}, created_ts={self.created_ts!r}, updated_ts={self.updated_ts!r}, deleted_ts={self.deleted_ts!r}, user_id={self.user_id!r})"
 
     @staticmethod
     def get_user_yarns_by_user_id(session: Session, user_id: int, exclude_deleted=True):
