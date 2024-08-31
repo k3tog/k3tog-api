@@ -64,6 +64,19 @@ CREATE TABLE IF NOT EXISTS k3tog."user_pattern"
 )
 TABLESPACE pg_default;
 
+CREATE TABLE IF NOT EXISTS k3tog."pattern_document"
+(
+    id BIGSERIAL NOT NULL,
+    document_id VARCHAR(100) NOT NULL,
+    document_key VARCHAR(250) NOT NULL, 
+    filename_display VARCHAR(150),
+    created_ts TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deleted_ts TIMESTAMP WITH TIME ZONE,
+    pattern_id BIGINT NULL,
+    CONSTRAINT pattern_document_pkey PRIMARY KEY (id)
+)
+TABLESPACE pg_default;
+
 
 CREATE TABLE IF NOT EXISTS k3tog."user_yarn"
 (
@@ -154,3 +167,4 @@ ALTER TABLE IF EXISTS k3tog."user_gauge" OWNER to k3tog_api_user;
 ALTER TABLE IF EXISTS k3tog."project_needle" OWNER to k3tog_api_user;
 ALTER TABLE IF EXISTS k3tog."project_yarn" OWNER to k3tog_api_user;
 ALTER TABLE IF EXISTS k3tog."project_gauge" OWNER to k3tog_api_user;
+ALTER TABLE IF EXISTS k3tog."pattern_document" OWNER to k3tog_api_user;
