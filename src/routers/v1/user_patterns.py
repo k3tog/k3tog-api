@@ -1,6 +1,6 @@
 import logging
 
-from typing import Annotated, List, Optional
+from typing import Annotated, List
 from fastapi import APIRouter, File, HTTPException, Path, UploadFile, status
 
 from routers.utils import APITags
