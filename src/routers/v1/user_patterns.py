@@ -1,7 +1,7 @@
 import logging
 
-from typing import Annotated, List
-from fastapi import APIRouter, HTTPException, Path, status
+from typing import Annotated, List, Optional
+from fastapi import APIRouter, File, HTTPException, Path, UploadFile, status
 
 from routers.utils import APITags
 from schemas.v1.user_pattern import UserPatternCreateRequestInfoV1, UserPatternV1
@@ -9,6 +9,12 @@ from db.database import get_db_session
 from models.user import User
 from models.user_pattern import UserPattern
 from services.user_pattern_manager import UserPatternManager
+from services.storage_manager import (
+    SupabaseStorageFileUploadFailedException,
+)
+from services.pattern_document_manager import PatternDocumentManager
+from models.pattern_document import PatternDocument
+from schemas.v1.pattern_document import PatternDocumentInfoV1
 
 logger = logging.getLogger(__name__)
 
@@ -88,6 +94,73 @@ async def get_user_pattern(
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND, detail="No pattern found"
     )
+
+
+@router.post(
+    "/v1/users/{username}/patterns/upload",
+    status_code=status.HTTP_201_CREATED,
+    tags=[APITags.patterns],
+    description="Upload pattern attachment to the file storage",
+    response_model=PatternDocumentInfoV1,
+    response_model_exclude_none=True,
+)
+async def upload_user_pattern_attachment(
+    username: Annotated[
+        str, Path(title="Username of the user to create a new project for")
+    ],
+    pattern_file: UploadFile = File(description="Pattern PDF attachment"),
+):
+    with get_db_session() as session:
+        user = User.get_user_by_username(session=session, username=username)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid username",
+            )
+
+    # NOTE(Irene): allowing pdf only for now
+    if not pattern_file.filename.endswith(".pdf"):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid file format - only .pdf allowed",
+        )
+
+    # save the file temporarily
+    tmp_filepath = f"/tmp/{pattern_file.filename}"
+    with open(tmp_filepath, "wb") as f:
+        f.write(await pattern_file.read())
+
+    pattern_document_manager = PatternDocumentManager()
+
+    try:
+        (
+            document_id,
+            document_key,
+        ) = pattern_document_manager.upload_pattern_attachment_to_storage(
+            filepath=tmp_filepath,
+            username=username,
+            content_type=pattern_file.headers.get("content-type"),
+        )
+
+    except SupabaseStorageFileUploadFailedException:
+        HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Uploading a pattern file attachment failed. Please try again.",
+        )
+
+    with get_db_session() as session:
+        pattern_document = PatternDocument(
+            document_id=document_id,
+            document_key=document_key,
+            filename_display=pattern_file.filename,
+        )
+
+        session.add(pattern_document)
+        session.commit()
+
+        return pattern_document_manager.convert_pattern_document_to_pattern_document_info_v1(
+            pattern_document=pattern_document
+        )
 
 
 # `POST /v1/users/{username}/patterns/`
