@@ -3,7 +3,7 @@ import uuid
 import os
 
 from services.storage_manager import StorageManager
-from schemas.v1.pattern_document import PatternDocumentInfoV1
+from schemas.v1.pattern_document import PatternDocumentV1
 from services.utils import convert_datetime_to_unixtime
 
 logger = logging.getLogger(__name__)
@@ -23,9 +23,9 @@ class PatternDocumentManager:
 
     def convert_pattern_document_to_pattern_document_info_v1(
         self, pattern_document
-    ) -> PatternDocumentInfoV1:
+    ) -> PatternDocumentV1:
 
-        return PatternDocumentInfoV1(
+        return PatternDocumentV1(
             id=pattern_document.id,
             document_id=pattern_document.document_id,
             document_key=pattern_document.document_key,

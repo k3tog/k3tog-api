@@ -14,7 +14,7 @@ from services.storage_manager import (
 )
 from services.pattern_document_manager import PatternDocumentManager
 from models.pattern_document import PatternDocument
-from schemas.v1.pattern_document import PatternDocumentInfoV1
+from schemas.v1.pattern_document import PatternDocumentV1
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ router = APIRouter()
     response_model=List[UserPatternV1],
     response_model_exclude_none=True,
 )
-async def get_user_patterns(
+def get_user_patterns(
     username: Annotated[
         str, Path(title="Username of the user to get a list of patterns for")
     ]
@@ -68,7 +68,7 @@ async def get_user_patterns(
     response_model=UserPatternV1,
     response_model_exclude_none=True,
 )
-async def get_user_pattern(
+def get_user_pattern(
     username: Annotated[
         str, Path(title="Username of the user to get a list of patterns for")
     ],
@@ -102,12 +102,12 @@ async def get_user_pattern(
     status_code=status.HTTP_201_CREATED,
     tags=[APITags.patterns],
     description="Upload pattern attachment to the file storage",
-    response_model=PatternDocumentInfoV1,
+    response_model=PatternDocumentV1,
     response_model_exclude_none=True,
 )
 async def upload_user_pattern_attachment(
     username: Annotated[
-        str, Path(title="Username of the user to create a new project for")
+        str, Path(title="Username of the user to create a new pattern for")
     ],
     pattern_file: UploadFile = File(description="Pattern PDF attachment"),
 ):
@@ -173,10 +173,10 @@ async def upload_user_pattern_attachment(
     response_model=UserPatternV1,
     response_model_exclude_none=True,
 )
-async def create_user_pattern(
+def create_user_pattern(
     pattern_create_req: UserPatternCreateRequestInfoV1,
     username: Annotated[
-        str, Path(title="Username of the user to create a new project for")
+        str, Path(title="Username of the user to create a new pattern for")
     ],
 ):
     with get_db_session() as session:
@@ -214,4 +214,41 @@ async def create_user_pattern(
 
 # `PUT /v1/users/{username}/patterns/{pattern_id}`
 
+
 # `DELETE /v1/users/{username}/patterns/{pattern_id}`
+@router.delete(
+    "/v1/users/{username}/patterns/{pattern_id}",
+    tags=[APITags.patterns],
+    description="Delete the specified pattern",
+    response_model=UserPatternV1,
+)
+def delete_pattern(
+    username: Annotated[
+        str, Path(title="Username of the user to get a list of patterns for")
+    ],
+    pattern_id: Annotated[int, Path(title="ID of the pattern")],
+):
+    with get_db_session() as session:
+        user = User.get_user_by_username(session=session, username=username)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid username",
+            )
+
+        user_pattern = (
+            UserPattern.delete_user_pattern_and_documents_by_pattern_id_user_id(
+                session=session, pattern_id=pattern_id, user_id=user.id
+            )
+        )
+        if user_pattern:
+            session.add(user_pattern)
+            session.commit()
+
+            return UserPatternManager().convert_user_pattern_to_user_pattern_v1(
+                user_pattern=user_pattern
+            )
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND, detail="No pattern found"
+    )
