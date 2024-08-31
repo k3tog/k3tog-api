@@ -25,11 +25,25 @@ CREATE TABLE IF NOT EXISTS k3tog."user"
     created_ts TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_ts TIMESTAMP WITH TIME ZONE,
     deactivated_ts TIMESTAMP WITH TIME ZONE,
-    preferred_language_id BIGSERIAL NOT NULL,
+    preferred_language_id BIGINT NOT NULL,
     CONSTRAINT user_pkey PRIMARY KEY (id)
 )
 TABLESPACE pg_default;
 
+
+CREATE TABLE IF NOT EXISTS k3tog."photo"
+(
+    id BIGSERIAL NOT NULL,
+    photo_id VARCHAR(100) NOT NULL,
+    photo_key VARCHAR(100) NOT NULL,
+    is_thumbnail BOOLEAN DEFAULT FALSE,
+    created_ts TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deleted_ts TIMESTAMP WITH TIME ZONE,
+    type VARCHAR(50) NOT NULL,
+    reference_id BIGINT NOT NULL,
+    CONSTRAINT photo_pkey PRIMARY KEY (id)
+)
+TABLESPACE pg_default;
 
 CREATE TABLE IF NOT EXISTS k3tog."project"
 (
@@ -43,8 +57,8 @@ CREATE TABLE IF NOT EXISTS k3tog."project"
     created_ts TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_ts TIMESTAMP WITH TIME ZONE,
     deleted_ts TIMESTAMP WITH TIME ZONE,
-    pattern_id BIGSERIAL NOT NULL,
-    user_id BIGSERIAL NOT NULL,
+    pattern_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
     CONSTRAINT project_pkey PRIMARY KEY (id)
 )
 TABLESPACE pg_default;
@@ -59,7 +73,7 @@ CREATE TABLE IF NOT EXISTS k3tog."user_pattern"
     created_ts TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_ts TIMESTAMP WITH TIME ZONE,
     deleted_ts TIMESTAMP WITH TIME ZONE,
-    user_id BIGSERIAL NOT NULL,
+    user_id BIGINT NOT NULL,
     CONSTRAINT user_pattern_pkey PRIMARY KEY (id)
 )
 TABLESPACE pg_default;
@@ -81,14 +95,17 @@ TABLESPACE pg_default;
 CREATE TABLE IF NOT EXISTS k3tog."user_yarn"
 (
     id BIGSERIAL NOT NULL,
-    name VARCHAR(100) NOT NULL,
+    yarn_name VARCHAR(300) NOT NULL,
+    brand_name VARCHAR(300),
     color VARCHAR(100),
+    needle_range numrange,
+    hook_range numrange,
+    weight DECIMAL(7, 2),
     note TEXT,
-    num_used FLOAT,
     created_ts TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_ts TIMESTAMP WITH TIME ZONE,
     deleted_ts TIMESTAMP WITH TIME ZONE,
-    user_id BIGSERIAL NOT NULL,
+    user_id BIGINT NOT NULL,
     CONSTRAINT user_yarn_pkey PRIMARY KEY (id)
 )
 TABLESPACE pg_default;
@@ -103,7 +120,7 @@ CREATE TABLE IF NOT EXISTS k3tog."user_needle"
     created_ts TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_ts TIMESTAMP WITH TIME ZONE,
     deleted_ts TIMESTAMP WITH TIME ZONE,
-    user_id BIGSERIAL NOT NULL,
+    user_id BIGINT NOT NULL,
     CONSTRAINT user_needle_pkey PRIMARY KEY (id)
 )
 TABLESPACE pg_default;
@@ -119,9 +136,9 @@ CREATE TABLE IF NOT EXISTS k3tog."user_gauge"
     created_ts TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_ts TIMESTAMP WITH TIME ZONE,
     deleted_ts TIMESTAMP WITH TIME ZONE,
-    user_id BIGSERIAL NOT NULL,
-    yarn_id BIGSERIAL NOT NULL,
-    needle_id BIGSERIAL NOT NULL,
+    user_id BIGINT NOT NULL,
+    yarn_id BIGINT NOT NULL,
+    needle_id BIGINT NOT NULL,
     CONSTRAINT user_gauge_pkey PRIMARY KEY (id)
 )
 TABLESPACE pg_default;
@@ -142,7 +159,8 @@ CREATE TABLE IF NOT EXISTS k3tog."project_yarn"
     project_id BIGSERIAL NOT NULL,
     yarn_id BIGSERIAL NOT NULL, 
     created_ts TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_ts TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    updated_ts TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    num_used FLOAT
 )
 TABLESPACE pg_default;
 
@@ -168,3 +186,4 @@ ALTER TABLE IF EXISTS k3tog."project_needle" OWNER to k3tog_api_user;
 ALTER TABLE IF EXISTS k3tog."project_yarn" OWNER to k3tog_api_user;
 ALTER TABLE IF EXISTS k3tog."project_gauge" OWNER to k3tog_api_user;
 ALTER TABLE IF EXISTS k3tog."pattern_document" OWNER to k3tog_api_user;
+ALTER TABLE IF EXISTS k3tog."photo" OWNER to k3tog_api_user;

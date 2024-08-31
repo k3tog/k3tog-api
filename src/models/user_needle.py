@@ -36,6 +36,12 @@ class UserNeedle(Base):
         "Project", secondary=project_needle, back_populates="user_needles"
     )
 
+    photos = relationship(
+        "Photo",
+        primaryjoin="and_(foreign(Photo.reference_id)==UserNeedle.id, Photo.type=='user_needle')",
+        back_populates="user_needle",
+    )
+
     def __repr__(self):
         return f"UserNeedle(id={self.id!r}, name={self.name!r}, size={self.size!r}, note={self.note!r}, created_ts={self.created_ts!r}, updated_ts={self.updated_ts!r}, deleted_ts={self.deleted_ts!r}, user_id={self.user_id!r})"
 

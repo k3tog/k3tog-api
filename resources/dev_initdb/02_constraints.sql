@@ -117,3 +117,39 @@ ALTER TABLE IF EXISTS k3tog."pattern_document"
     REFERENCES k3tog."user_pattern" (id) MATCH SIMPLE
     ON UPDATE CASCADE
     ON DELETE SET NULL;
+
+ALTER TABLE IF EXISTS k3tog."photo"
+    ADD CONSTRAINT fpk_user_yarn_photo FOREIGN KEY (reference_id)
+    REFERENCES k3tog."user_yarn" (id) MATCH SIMPLE
+    ON UPDATE CASCADE
+    ON DELETE SET NULL
+    NOT VALID;
+
+ALTER TABLE IF EXISTS k3tog."photo"
+    ADD CONSTRAINT fpk_user_needle_photo FOREIGN KEY (reference_id)
+    REFERENCES k3tog."user_needle" (id) MATCH SIMPLE
+    ON UPDATE CASCADE
+    ON DELETE SET NULL
+    NOT VALID;
+
+ALTER TABLE IF EXISTS k3tog."photo"
+    ADD CONSTRAINT fpk_project_photo FOREIGN KEY (reference_id)
+    REFERENCES k3tog."project" (id) MATCH SIMPLE
+    ON UPDATE CASCADE
+    ON DELETE SET NULL
+    NOT VALID;
+
+ALTER TABLE IF EXISTS k3tog."photo"
+    ADD CONSTRAINT fpk_user_gauge_photo FOREIGN KEY (reference_id)
+    REFERENCES k3tog."user_gauge" (id) MATCH SIMPLE
+    ON UPDATE CASCADE
+    ON DELETE SET NULL
+    NOT VALID;
+
+-- ALTER TABLE IF EXISTS k3tog."photo"
+--     ADD CONSTRAINT photo_type_check CHECK (
+--         (type = 'user_yarn' AND reference_id IN (SELECT id FROM k3tog."user_yarn")) OR
+--         (type = 'user_needle' AND reference_id IN (SELECT id FROM k3tog."user_needle")) OR
+--         (type = 'project' AND reference_id IN (SELECT id FROM k3tog."project")) OR
+--         (type = 'user_gauge' AND reference_id IN (SELECT id FROM k3tog."user_gauge"))
+--     );

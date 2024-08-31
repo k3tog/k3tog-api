@@ -1,6 +1,6 @@
 import logging
 
-from sqlalchemy import BigInteger, Column, DateTime, ForeignKey, Table, func
+from sqlalchemy import BigInteger, Column, DateTime, ForeignKey, Table, func, Float
 from db.database import Base
 
 
@@ -22,6 +22,7 @@ project_yarn = Table(
     Column("yarn_id", BigInteger, ForeignKey("user_yarn.id"), primary_key=True),
     Column("created_ts", DateTime, server_default=func.now()),
     Column("updated_ts", DateTime, onupdate=func.now()),
+    Column("num_used", Float),
 )
 
 project_gauge = Table(
