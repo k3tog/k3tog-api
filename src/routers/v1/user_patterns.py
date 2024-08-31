@@ -86,10 +86,10 @@ async def get_user_pattern(
             session=session, pattern_id=pattern_id, user_id=user.id
         )
 
-    if user_pattern:
-        return UserPatternManager().convert_user_pattern_to_user_pattern_v1(
-            user_pattern=user_pattern
-        )
+        if user_pattern:
+            return UserPatternManager().convert_user_pattern_to_user_pattern_v1(
+                user_pattern=user_pattern
+            )
 
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND, detail="No pattern found"
