@@ -48,14 +48,14 @@ async def get_user_patterns(
             session=session, user_id=user.id
         )
 
-    user_pattern_info = []
-    user_pattern_manager = UserPatternManager()
-    for user_pattern in user_patterns:
-        user_pattern_info.append(
-            user_pattern_manager.convert_user_pattern_to_user_pattern_v1(
-                user_pattern=user_pattern
+        user_pattern_info = []
+        user_pattern_manager = UserPatternManager()
+        for user_pattern in user_patterns:
+            user_pattern_info.append(
+                user_pattern_manager.convert_user_pattern_to_user_pattern_v1(
+                    user_pattern=user_pattern
+                )
             )
-        )
 
     return user_pattern_info
 
