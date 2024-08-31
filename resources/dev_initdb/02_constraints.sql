@@ -111,3 +111,9 @@ ALTER TABLE IF EXISTS k3tog."project_gauge"
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
+
+ALTER TABLE IF EXISTS k3tog."pattern_document"
+    ADD CONSTRAINT fpk_pattern_document_pattern_id FOREIGN KEY (pattern_id)
+    REFERENCES k3tog."user_pattern" (id) MATCH SIMPLE
+    ON UPDATE CASCADE
+    ON DELETE SET NULL;

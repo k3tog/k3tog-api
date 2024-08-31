@@ -187,16 +187,22 @@ async def create_user_pattern(
                 detail="Invalid username",
             )
 
+        # if pattern document was attached
+        # find the pattern document db row by document id
+        pattern_documents = []
+        if pattern_create_req.pattern_document_id:
+            pattern_document = PatternDocument.get_pattern_document_by_document_id(
+                session=session, document_id=pattern_create_req.pattern_document_id
+            )
+            pattern_documents = [pattern_document]
+
         user_pattern = UserPattern(
             name=pattern_create_req.name,
             author=pattern_create_req.author,
             description=pattern_create_req.description,
             user_id=user.id,
+            pattern_documents=pattern_documents,
         )
-
-        # TODO(irene): integrate supabase filestorage
-        # upload the pattern file if attached
-        # make pattern_document row and connect to this user_pattern
 
         session.add(user_pattern)
         session.commit()
