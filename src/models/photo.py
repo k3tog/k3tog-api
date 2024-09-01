@@ -8,7 +8,7 @@ from sqlalchemy import (
     func,
     Boolean,
 )
-from sqlalchemy.orm import relationship, Session, backref
+from sqlalchemy.orm import relationship
 
 from db.database import Base
 
@@ -20,7 +20,7 @@ class Photo(Base):
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     photo_id = Column(String(100), nullable=False)
-    photo_key = Column(String(100), nullable=False)
+    photo_key = Column(String(300), nullable=False)
     is_thumbnail = Column(Boolean, default=False)
     created_ts = Column(DateTime, nullable=False, server_default=func.now())
     deleted_ts = Column(DateTime, nullable=True)

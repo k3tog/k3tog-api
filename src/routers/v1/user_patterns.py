@@ -144,7 +144,7 @@ async def upload_user_pattern_attachment(
         )
 
     except SupabaseStorageFileUploadFailedException:
-        HTTPException(
+        raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Uploading a pattern file attachment failed. Please try again.",
         )

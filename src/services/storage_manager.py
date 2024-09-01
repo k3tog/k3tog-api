@@ -11,7 +11,7 @@ class SupabaseStorageFileUploadFailedException(Exception):
 
 
 class StorageManager:
-    BUCKETS = {"patterns": "k3tog-patterns"}
+    BUCKETS = {"patterns": "k3tog-patterns", "photos": "k3tog-user-photos"}
 
     def __init__(self):
         self.supabase = get_supabase_cli()
