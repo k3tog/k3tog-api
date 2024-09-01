@@ -35,12 +35,12 @@ CREATE TABLE IF NOT EXISTS k3tog."photo"
 (
     id BIGSERIAL NOT NULL,
     photo_id VARCHAR(100) NOT NULL,
-    photo_key VARCHAR(100) NOT NULL,
+    photo_key VARCHAR(300) NOT NULL,
     is_thumbnail BOOLEAN DEFAULT FALSE,
     created_ts TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_ts TIMESTAMP WITH TIME ZONE,
     type VARCHAR(50) NOT NULL,
-    reference_id BIGINT NOT NULL,
+    reference_id BIGINT NULL,
     CONSTRAINT photo_pkey PRIMARY KEY (id)
 )
 TABLESPACE pg_default;

@@ -105,7 +105,7 @@ async def create_user_yarn(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid username",
             )
-        
+
         # TODO(irene): implement api endpoint for uploading multiple photos and connect them to here
 
         user_yarn = UserYarn(
