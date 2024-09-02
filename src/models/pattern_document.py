@@ -1,5 +1,4 @@
 import logging
-from typing import List
 
 from sqlalchemy import (
     BigInteger,
@@ -11,7 +10,6 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Session
 from db.database import Base
-from models.user_pattern import UserPattern
 
 
 logger = logging.getLogger(__name__)

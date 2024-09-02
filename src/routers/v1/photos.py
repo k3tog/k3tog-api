@@ -28,7 +28,7 @@ router = APIRouter()
     tags=[APITags.photos],
     description="Upload multiple photos to the file storage",
     response_model=List[PhotoInfoV1],
-    response_model_exclude_none=True
+    response_model_exclude_none=True,
 )
 async def upload_photo_attachments(
     username: Annotated[
@@ -55,7 +55,9 @@ async def upload_photo_attachments(
             with open(tmp_filepath, "wb") as f:
                 f.write(await photo.read())
 
-            unique_filepath = f"{username}/{category}/{str(uuid.uuid4())}_{photo.filename}"
+            unique_filepath = (
+                f"{username}/{category}/{str(uuid.uuid4())}_{photo.filename}"
+            )
 
             try:
                 photo_id, photo_key = storage_manager.upload_single_attachment(
@@ -74,7 +76,10 @@ async def upload_photo_attachments(
                 )
 
             photo_row = Photo(
-                photo_id=photo_id, photo_key=photo_key, is_thumbnail=False, type=category
+                photo_id=photo_id,
+                photo_key=photo_key,
+                is_thumbnail=False,
+                type=category,
             )
             session.add(photo_row)
             db_added_photos.append(photo_row)

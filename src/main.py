@@ -12,7 +12,7 @@ from routers.v1 import (
     user_patterns,
     user_yarns,
     user_needles,
-    photos
+    photos,
 )
 from db.database import Base, get_engine
 

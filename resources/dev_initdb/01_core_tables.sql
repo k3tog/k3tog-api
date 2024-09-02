@@ -39,8 +39,8 @@ CREATE TABLE IF NOT EXISTS k3tog."photo"
     is_thumbnail BOOLEAN DEFAULT FALSE,
     created_ts TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted_ts TIMESTAMP WITH TIME ZONE,
-    type VARCHAR(50) NOT NULL,
-    reference_id BIGINT NULL,
+    type VARCHAR(50) NULL,
+    reference_id INTEGER NULL,
     CONSTRAINT photo_pkey PRIMARY KEY (id)
 )
 TABLESPACE pg_default;

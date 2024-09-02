@@ -53,12 +53,6 @@ class Project(Base):
         "UserGauge", secondary=project_gauge, back_populates="projects"
     )
 
-    photos = relationship(
-        "Photo",
-        primaryjoin="and_(foreign(Photo.reference_id)==Project.id, Photo.type=='project')",
-        back_populates="project",
-    )
-
     def __repr__(self):
         return f"Project(id={self.id!r}, title={self.title!r}, status={self.status!r}, co_date={self.co_date!r}, fo_date={self.fo_date!r}, size={self.size!r}, note={self.note!r}, created_ts={self.created_ts!r}, updated_ts={self.updated_ts!r}, deleted_ts={self.deleted_ts!r}, pattern_id={self.pattern_id!r}, user_id={self.user_id!r})"
 

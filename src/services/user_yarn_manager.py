@@ -2,6 +2,7 @@ import logging
 
 from services.utils import convert_datetime_to_unixtime
 from schemas.v1.user_yarn import UserYarnV1
+from services.photo_manager import PhotoManager
 
 
 logger = logging.getLogger(__name__)
@@ -9,7 +10,11 @@ logger = logging.getLogger(__name__)
 
 class UserYarnManager:
 
-    def convert_user_yarn_to_user_yarn_v1(self, user_yarn) -> UserYarnV1:
+    def convert_user_yarn_to_user_yarn_v1(self, user_yarn, photos=[]) -> UserYarnV1:
+        photo_manager = PhotoManager()
+        photos = [
+            photo_manager.convert_photo_to_photo_info_v1(photo) for photo in photos
+        ]
         return UserYarnV1(
             id=user_yarn.id,
             yarn_name=user_yarn.yarn_name,
@@ -21,4 +26,5 @@ class UserYarnManager:
             note=user_yarn.note,
             created_ts=convert_datetime_to_unixtime(user_yarn.created_ts),
             updated_ts=convert_datetime_to_unixtime(user_yarn.updated_ts),
+            photos=photos,
         )
