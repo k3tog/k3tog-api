@@ -42,12 +42,6 @@ class UserYarn(Base):
         "Project", secondary=project_yarn, back_populates="user_yarns"
     )
 
-    photos = relationship(
-        "Photo",
-        primaryjoin="and_(foreign(Photo.reference_id)==UserYarn.id, Photo.type=='user_yarn')",
-        back_populates="user_yarn",
-    )
-
     def __repr__(self):
         return f"UserYarn(id={self.id!r}, yarn_name={self.yarn_name!r}, brand_name={self.brand_name}, color={self.color!r}, needle_range={self.needle_range!r}, hook_range={self.hook_range!r}, weight={self.weight!r}, note={self.note!r}, created_ts={self.created_ts!r}, updated_ts={self.updated_ts!r}, deleted_ts={self.deleted_ts!r}, user_id={self.user_id!r})"
 

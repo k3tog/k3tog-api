@@ -9,6 +9,7 @@ from models.user import User
 from schemas.v1.user_yarn import UserYarnCreateRequestInfoV1, UserYarnV1
 from models.user_yarn import UserYarn
 from services.user_yarn_manager import UserYarnManager
+from models.photo import Photo
 
 logger = logging.getLogger(__name__)
 
@@ -41,12 +42,18 @@ async def get_user_yarns(
             session=session, user_id=user.id
         )
 
-    user_yarn_info = []
-    user_yarn_manager = UserYarnManager()
-    for user_yarn in user_yarns:
-        user_yarn_info.append(
-            user_yarn_manager.convert_user_yarn_to_user_yarn_v1(user_yarn=user_yarn)
-        )
+        user_yarn_info = []
+        user_yarn_manager = UserYarnManager()
+        for user_yarn in user_yarns:
+            # get photos for the user yarn
+            photos = Photo.get_photos_by_reference_id_type(
+                session=session, reference_id=user_yarn.id, type="user_yarn"
+            )
+            user_yarn_info.append(
+                user_yarn_manager.convert_user_yarn_to_user_yarn_v1(
+                    user_yarn=user_yarn, photos=photos
+                )
+            )
 
     return user_yarn_info
 
@@ -77,8 +84,14 @@ async def get_user_yarn(
             session=session, yarn_id=yarn_id, user_id=user.id
         )
 
-    if user_yarn:
-        return UserYarnManager().convert_user_yarn_to_user_yarn_v1(user_yarn=user_yarn)
+        if user_yarn:
+            # get photos for the user yarn
+            photos = Photo.get_photos_by_reference_id_type(
+                session=session, reference_id=user_yarn.id, type="user_yarn"
+            )
+            return UserYarnManager().convert_user_yarn_to_user_yarn_v1(
+                user_yarn=user_yarn, photos=photos
+            )
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No yarn found")
 
@@ -106,7 +119,11 @@ async def create_user_yarn(
                 detail="Invalid username",
             )
 
-        # TODO(irene): implement api endpoint for uploading multiple photos and connect them to here
+        # if photo ids were sent
+        # find the photo db rows by photo ids
+        photos = Photo.get_photos_by_photo_ids(
+            session=session, photo_ids=yarn_create_req.photo_ids
+        )
 
         user_yarn = UserYarn(
             yarn_name=yarn_create_req.yarn_name,
@@ -122,11 +139,18 @@ async def create_user_yarn(
             note=yarn_create_req.note,
             user_id=user.id,
         )
-
         session.add(user_yarn)
+        session.flush()
+
+        for photo in photos:
+            photo.reference_id = user_yarn.id
+            photo.type = "user_yarn"
+
         session.commit()
 
-        return UserYarnManager().convert_user_yarn_to_user_yarn_v1(user_yarn=user_yarn)
+        return UserYarnManager().convert_user_yarn_to_user_yarn_v1(
+            user_yarn=user_yarn, photos=photos
+        )
 
 
 # `PUT /v1/users/{username}/yarns/{yarn_id}`
