@@ -1,14 +1,11 @@
+from datetime import datetime
 import logging
 from typing import List
 
 from sqlalchemy import BigInteger, Column, DateTime, String, func, Boolean, Integer
-from sqlalchemy.orm import relationship, Session
+from sqlalchemy.orm import Session
 
 from db.database import Base
-from models.project import Project
-from models.user_gauge import UserGauge
-from models.user_needle import UserNeedle
-from models.user_yarn import UserYarn
 
 logger = logging.getLogger(__name__)
 
@@ -25,18 +22,18 @@ class Photo(Base):
     type = Column(String(50), nullable=True)  # user_yarn, user_needle, project, gauge
     reference_id = Column(Integer, nullable=True)  # ID of the related entity
 
-    @property
-    def entity(self, session: Session):
-        if self.type == "project":
-            return session.query(Project).get(self.reference_id)
-        elif self.type == "user_yarn":
-            return session.query(UserYarn).get(self.reference_id)
-        elif self.type == "user_needle":
-            return session.query(UserNeedle).get(self.reference_id)
-        elif self.type == "user_gauge":
-            return session.query(UserGauge).get(self.reference_id)
-        else:
-            return None
+    # @property
+    # def entity(self, session: Session):
+    #     if self.type == "project":
+    #         return session.query(Project).get(self.reference_id)
+    #     elif self.type == "user_yarn":
+    #         return session.query(UserYarn).get(self.reference_id)
+    #     elif self.type == "user_needle":
+    #         return session.query(UserNeedle).get(self.reference_id)
+    #     elif self.type == "user_gauge":
+    #         return session.query(UserGauge).get(self.reference_id)
+    #     else:
+    #         return None
 
     def __repr__(self):
         return f"Photo(id={self.id!r}, photo_id={self.photo_id!r}, photo_key={self.photo_key!r}, is_thumbnail={self.is_thumbnail!r}, created_ts={self.created_ts!r}, deleted_ts={self.deleted_ts!r}, type={self.type!r}, reference_id={self.reference_id!r})"
@@ -52,3 +49,18 @@ class Photo(Base):
             .filter(Photo.reference_id == reference_id, Photo.type == type)
             .all()
         )
+
+    @staticmethod
+    def delete_photos_by_reference_id_type(
+        session: Session, reference_id: int, type: str
+    ):
+        photos = Photo.get_photos_by_reference_id_type(
+            session=session, reference_id=reference_id, type=type
+        )
+        if not photos:
+            return None
+
+        for photo in photos:
+            photo.deleted_ts = datetime.now()
+
+        return photos
