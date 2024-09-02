@@ -1,13 +1,14 @@
 import logging
-
 from typing import Annotated, List
+
 from fastapi import APIRouter, HTTPException, Path, status
 
-from routers.utils import APITags
 from db.database import get_db_session
+from models.photo import Photo
 from models.user import User
-from schemas.v1.user_needle import UserNeedleCreateRequestInfoV1, UserNeedleV1
 from models.user_needle import UserNeedle
+from routers.utils import APITags
+from schemas.v1.user_needle import UserNeedleCreateRequestInfoV1, UserNeedleV1
 from services.user_needle_manager import UserNeedleManager
 
 logger = logging.getLogger(__name__)
@@ -110,19 +111,30 @@ async def create_user_needle(
                 detail="Invalid username",
             )
 
+        # if photo ids were sent
+        # find the photo db rows by photo ids
+        photos = Photo.get_photos_by_photo_ids(
+            session=session, photo_ids=needle_create_req.photo_ids
+        )
+
         user_needle = UserNeedle(
             name=needle_create_req.name,
             size=needle_create_req.size,
             note=needle_create_req.note,
             user_id=user.id,
         )
-
         session.add(user_needle)
+        session.flush()
+
+        for photo in photos:
+            photo.reference_id = user_needle.id
+            photo.type = "user_needle"
+
         session.commit()
 
-    return UserNeedleManager().convert_user_needle_to_user_needle_v1(
-        user_needle=user_needle
-    )
+        return UserNeedleManager().convert_user_needle_to_user_needle_v1(
+            user_needle=user_needle, photos=photos
+        )
 
 
 # `PUT /v1/users/{username}/needles/{needle_id}`
