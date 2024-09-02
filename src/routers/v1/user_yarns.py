@@ -155,4 +155,42 @@ async def create_user_yarn(
 
 # `PUT /v1/users/{username}/yarns/{yarn_id}`
 
+
 # `DELETE /v1/users/{username}/yarns/{yarn_id}`
+@router.delete(
+    "/v1/users/{username}/yarns/{yarn_id}",
+    tags=[APITags.yarns],
+    description="Delete a yarn for the user",
+)
+async def delete_user_yarn(
+    username: Annotated[str, Path(title="Username of the user to delete a yarn for")],
+    yarn_id: Annotated[int, Path(title="ID of the yarn to delete")],
+):
+    with get_db_session() as session:
+        user = User.get_user_by_username(session=session, username=username)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid username",
+            )
+
+        # delete the user yarn and all connected photos
+        user_yarn = UserYarn.delete_user_yarn_by_yarn_id_user_id(
+            session=session, yarn_id=yarn_id, user_id=user.id
+        )
+
+        if user_yarn:
+            photos = Photo.delete_photos_by_reference_id_type(
+                session=session, reference_id=yarn_id, type="user_yarn"
+            )
+            if photos:
+                session.add_all(photos)
+
+            session.add(user_yarn)
+            session.commit()
+
+            return UserYarnManager().convert_user_yarn_to_user_yarn_v1(
+                user_yarn=user_yarn, photos=photos
+            )
+
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No yarn found")

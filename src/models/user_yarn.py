@@ -1,3 +1,4 @@
+from datetime import datetime
 import logging
 
 from sqlalchemy import (
@@ -58,3 +59,16 @@ class UserYarn(Base):
         return (
             session.query(UserYarn).filter_by(id=yarn_id, user_id=user_id).one_or_none()
         )
+
+    @staticmethod
+    def delete_user_yarn_by_yarn_id_user_id(
+        session: Session, yarn_id: int, user_id: int
+    ):
+        user_yarn = UserYarn.get_user_yarn_by_yarn_id_user_id(
+            session=session, yarn_id=yarn_id, user_id=user_id
+        )
+        if not user_yarn:
+            return None
+
+        user_yarn.deleted_ts = datetime.now()
+        return user_yarn
