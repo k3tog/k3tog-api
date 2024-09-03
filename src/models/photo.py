@@ -55,6 +55,14 @@ class Photo(Base):
         )
 
     @staticmethod
+    def get_photo_by_reference_id_type(session: Session, reference_id: int, type: str):
+        return (
+            session.query(Photo)
+            .filter(Photo.reference_id == reference_id, Photo.type == type)
+            .one_or_none()
+        )
+
+    @staticmethod
     def delete_photos_by_reference_id_type(
         session: Session, reference_id: int, type: str
     ):
