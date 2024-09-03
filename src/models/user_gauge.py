@@ -1,8 +1,8 @@
+from datetime import datetime
 import logging
 
 from sqlalchemy import (
     BigInteger,
-    Boolean,
     Column,
     DateTime,
     Float,
@@ -11,11 +11,10 @@ from sqlalchemy import (
     func,
     String,
 )
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Session
 from db.database import Base
 from models.assoc_tables import project_gauge
 from models.user import User
-from models.user_needle import UserNeedle
 from models.user_yarn import UserYarn
 
 logger = logging.getLogger(__name__)
@@ -45,3 +44,36 @@ class UserGauge(Base):
 
     def __repr__(self):
         return f"UesrGauge(id={self.id!r}, stitches={self.stitches!r}, rows={self.rows!r}, after_wash={self.after_wash!r}, note={self.note!r}, created_ts={self.created_ts!r}, updated_ts={self.updated_ts!r}, deleted_ts={self.deleted_ts!r}, needle_id={self.needle_id!r}, yarn_id={self.yarn_id!r})"
+
+    @staticmethod
+    def get_user_gauges_by_user_id(
+        session: Session, user_id: int, exclude_deleted=True
+    ):
+        q = session.query(UserGauge).filter_by(user_id=user_id)
+        if exclude_deleted:
+            q = q.filter(UserGauge.deleted_ts.is_(None))
+
+        return q.all()
+
+    @staticmethod
+    def get_user_gauge_by_gauge_id_user_id(
+        session: Session, gauge_id: int, user_id: int
+    ):
+        return (
+            session.query(UserGauge)
+            .filter_by(id=gauge_id, user_id=user_id)
+            .one_or_none()
+        )
+
+    @staticmethod
+    def delete_user_gauge_by_gauge_id_user_id(
+        session: Session, gauge_id: int, user_id: int
+    ):
+        user_gauge = UserGauge.get_user_gauge_by_gauge_id_user_id(
+            session=session, gauge_id=gauge_id, user_id=user_id
+        )
+        if not user_gauge:
+            return None
+
+        user_gauge.deleted_ts = datetime.now()
+        return user_gauge
