@@ -13,3 +13,4 @@ class APITags(Enum):
     needles = "NEEDLES"
     languages = "LANGUAGES"
     photos = "PHOTOS"
+    gauges = "GAUGES"

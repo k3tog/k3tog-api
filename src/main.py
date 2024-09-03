@@ -13,6 +13,7 @@ from routers.v1 import (
     user_yarns,
     user_needles,
     photos,
+    user_gauges,
 )
 from db.database import Base, get_engine
 
@@ -43,7 +44,7 @@ app.include_router(user_patterns.router)
 app.include_router(user_yarns.router)
 app.include_router(user_needles.router)
 app.include_router(photos.router)
-
+app.include_router(user_gauges.router)
 # static list of origins
 origins = ["http://localhost:3000", "https://localhost:3000"]
 

@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class UserNeedleManager:
+
     def convert_user_needle_to_user_needle_v1(
         self, user_needle, photos=[]
     ) -> UserNeedleV1:

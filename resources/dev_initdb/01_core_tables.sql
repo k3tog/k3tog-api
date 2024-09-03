@@ -129,16 +129,16 @@ TABLESPACE pg_default;
 CREATE TABLE IF NOT EXISTS k3tog."user_gauge"
 (
     id BIGSERIAL NOT NULL,
+    yarn_description VARCHAR(500),
+    needle_size VARCHAR(100),
     stitches FLOAT,
     rows FLOAT,
-    after_wash BOOLEAN,
     note TEXT,
     created_ts TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_ts TIMESTAMP WITH TIME ZONE,
     deleted_ts TIMESTAMP WITH TIME ZONE,
     user_id BIGINT NOT NULL,
-    yarn_id BIGINT NOT NULL,
-    needle_id BIGINT NOT NULL,
+    yarn_id BIGINT NULL,
     CONSTRAINT user_gauge_pkey PRIMARY KEY (id)
 )
 TABLESPACE pg_default;
