@@ -9,6 +9,7 @@ from sqlalchemy import (
     ForeignKey,
     Text,
     func,
+    String,
 )
 from sqlalchemy.orm import relationship
 from db.database import Base
@@ -24,15 +25,16 @@ class UserGauge(Base):
     __tablename__ = "user_gauge"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
+    yarn_description = Column(String(500), nullable=True)
+    needle_size = Column(String(100), nullable=True)
     stitches = Column(Float, nullable=True)
     rows = Column(Float, nullable=True)
-    after_wash = Column(Boolean, nullable=True)
+    # after_wash = Column(Boolean, nullable=True)
     note = Column(Text, nullable=True)
     created_ts = Column(DateTime, nullable=False, server_default=func.now())
     updated_ts = Column(DateTime, nullable=True, onupdate=func.now())
     deleted_ts = Column(DateTime, nullable=True)
 
-    needle_id = Column(BigInteger, ForeignKey(UserNeedle.id), nullable=True)
     yarn_id = Column(BigInteger, ForeignKey(UserYarn.id), nullable=True)
     user_id = Column(BigInteger, ForeignKey(User.id), nullable=False)
 

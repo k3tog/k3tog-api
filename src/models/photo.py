@@ -43,6 +43,10 @@ class Photo(Base):
         return session.query(Photo).filter(Photo.photo_id.in_(photo_ids)).all()
 
     @staticmethod
+    def get_photo_by_photo_id(session: Session, photo_id: str):
+        return session.query(Photo).filter(Photo.photo_id == photo_id).one_or_none()
+
+    @staticmethod
     def get_photos_by_reference_id_type(session: Session, reference_id: int, type: str):
         return (
             session.query(Photo)

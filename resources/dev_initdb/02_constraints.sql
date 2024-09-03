@@ -35,12 +35,6 @@ ALTER TABLE IF EXISTS k3tog."user_gauge"
     ON DELETE NO ACTION
     NOT VALID;
 
-ALTER TABLE IF EXISTS k3tog."user_gauge"
-    ADD CONSTRAINT fk_user_gauge_needle_id FOREIGN KEY (needle_id)
-    REFERENCES k3tog."user_needle" (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
 
 ALTER TABLE IF EXISTS k3tog."user_needle"
     ADD CONSTRAINT fk_user_needle_user_id FOREIGN KEY (user_id)
