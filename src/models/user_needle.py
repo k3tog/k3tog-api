@@ -1,3 +1,4 @@
+from datetime import datetime
 import logging
 
 from sqlalchemy import (
@@ -58,3 +59,16 @@ class UserNeedle(Base):
             .filter_by(id=needle_id, user_id=user_id)
             .one_or_none()
         )
+
+    @staticmethod
+    def delete_user_needle_by_needle_id_user_id(
+        session: Session, needle_id: int, user_id: int
+    ):
+        user_needle = UserNeedle.get_user_needle_by_needle_id_user_id(
+            session=session, needle_id=needle_id, user_id=user_id
+        )
+        if not user_needle:
+            return None
+
+        user_needle.deleted_ts = datetime.now()
+        return user_needle
