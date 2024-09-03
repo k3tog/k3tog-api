@@ -42,14 +42,18 @@ async def get_user_needles(
             session=session, user_id=user.id
         )
 
-    user_needle_info = []
-    user_needle_manager = UserNeedleManager()
-    for user_needle in user_needles:
-        user_needle_info.append(
-            user_needle_manager.convert_user_needle_to_user_needle_v1(
-                user_needle=user_needle
+        user_needle_info = []
+        user_needle_manager = UserNeedleManager()
+        for user_needle in user_needles:
+            # get photos for the user needle
+            photos = Photo.get_photos_by_reference_id_type(
+                session=session, reference_id=user_needle.id, type="user_needle"
             )
-        )
+            user_needle_info.append(
+                user_needle_manager.convert_user_needle_to_user_needle_v1(
+                    user_needle=user_needle, photos=photos
+                )
+            )
 
     return user_needle_info
 
@@ -80,10 +84,14 @@ async def get_user_needle(
             session=session, needle_id=needle_id, user_id=user.id
         )
 
-    if user_needle:
-        return UserNeedleManager().convert_user_needle_to_user_needle_v1(
-            user_needle=user_needle
-        )
+        if user_needle:
+            # get photos for the user needle
+            photos = Photo.get_photos_by_reference_id_type(
+                session=session, reference_id=user_needle.id, type="user_needle"
+            )
+            return UserNeedleManager().convert_user_needle_to_user_needle_v1(
+                user_needle=user_needle, photos=photos
+            )
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No needle found")
 
@@ -139,4 +147,42 @@ async def create_user_needle(
 
 # `PUT /v1/users/{username}/needles/{needle_id}`
 
+
 # `DELETE /v1/users/{username}/needles/{needle_id}`
+@router.delete(
+    "/v1/users/{username}/needles/{needle_id}",
+    tags=[APITags.needles],
+    description="Delete a needle for the user",
+)
+async def delete_user_needle(
+    username: Annotated[str, Path(title="Username of the user to delete a needle for")],
+    needle_id: Annotated[int, Path(title="ID of the needle to delete")],
+):
+    with get_db_session() as session:
+        user = User.get_user_by_username(session=session, username=username)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid username",
+            )
+
+        # delete the user needle and all connected photos
+        user_needle = UserNeedle.delete_user_needle_by_needle_id_user_id(
+            session=session, needle_id=needle_id, user_id=user.id
+        )
+
+        if user_needle:
+            photos = Photo.delete_photos_by_reference_id_type(
+                session=session, reference_id=needle_id, type="user_needle"
+            )
+            if photos:
+                session.add_all(photos)
+
+            session.add(user_needle)
+            session.commit()
+
+            return UserNeedleManager().convert_user_needle_to_user_needle_v1(
+                user_needle=user_needle, photos=photos
+            )
+
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No needle found")
