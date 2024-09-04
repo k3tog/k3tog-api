@@ -1,7 +1,8 @@
 import logging
+import os
 
 from sqlalchemy import BigInteger, Column, DateTime, ForeignKey, Table, func, Float
-from db.database import Base
+from db.database import DEFAULT_DB_SCHEMA_NAME, Base
 
 
 logger = logging.getLogger(__name__)
@@ -13,6 +14,7 @@ project_needle = Table(
     Column("needle_id", BigInteger, ForeignKey("user_needle.id"), primary_key=True),
     Column("created_ts", DateTime, server_default=func.now()),
     Column("updated_ts", DateTime, onupdate=func.now()),
+    __table_args__={"schema": os.environ.get("DB_SCHEMA", DEFAULT_DB_SCHEMA_NAME)},
 )
 
 project_yarn = Table(
@@ -23,6 +25,7 @@ project_yarn = Table(
     Column("created_ts", DateTime, server_default=func.now()),
     Column("updated_ts", DateTime, onupdate=func.now()),
     Column("num_used", Float),
+    __table_args__={"schema": os.environ.get("DB_SCHEMA", DEFAULT_DB_SCHEMA_NAME)},
 )
 
 project_gauge = Table(
@@ -32,4 +35,5 @@ project_gauge = Table(
     Column("gauge_id", BigInteger, ForeignKey("user_gauge.id"), primary_key=True),
     Column("created_ts", DateTime, server_default=func.now()),
     Column("updated_ts", DateTime, onupdate=func.now()),
+    __table_args__={"schema": os.environ.get("DB_SCHEMA", DEFAULT_DB_SCHEMA_NAME)},
 )
