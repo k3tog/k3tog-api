@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 class Language(Base):
     __tablename__ = "language"
+    __table_args__ = {"schema": "k3tog"}
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)
