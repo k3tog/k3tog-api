@@ -1,5 +1,6 @@
 from datetime import datetime
 import logging
+import os
 
 from sqlalchemy import (
     BigInteger,
@@ -12,7 +13,7 @@ from sqlalchemy import (
     String,
 )
 from sqlalchemy.orm import relationship, Session
-from db.database import Base
+from db.database import DEFAULT_DB_SCHEMA_NAME, Base
 from models.assoc_tables import project_gauge
 from models.user import User
 from models.user_yarn import UserYarn
@@ -22,6 +23,7 @@ logger = logging.getLogger(__name__)
 
 class UserGauge(Base):
     __tablename__ = "user_gauge"
+    __table_args__ = {"schema": os.environ.get("DB_SCHEMA", DEFAULT_DB_SCHEMA_NAME)}
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     yarn_description = Column(String(500), nullable=True)

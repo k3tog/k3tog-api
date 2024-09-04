@@ -1,8 +1,9 @@
 from datetime import datetime
 import logging
+import os
 
 from sqlalchemy import BigInteger, Column, DateTime, ForeignKey, String, func, Text
-from db.database import Base
+from db.database import DEFAULT_DB_SCHEMA_NAME, Base
 from sqlalchemy.orm import Session, relationship
 from models.user import User
 
@@ -12,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 class UserPattern(Base):
     __tablename__ = "user_pattern"
+    __table_args__ = {"schema": os.environ.get("DB_SCHEMA", DEFAULT_DB_SCHEMA_NAME)}
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     name = Column(String(500), nullable=False)

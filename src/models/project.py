@@ -1,4 +1,5 @@
 import logging
+import os
 
 from sqlalchemy import (
     BigInteger,
@@ -10,7 +11,7 @@ from sqlalchemy import (
     func,
 )
 from sqlalchemy.orm import relationship, backref, Session
-from db.database import Base
+from db.database import DEFAULT_DB_SCHEMA_NAME, Base
 from models.user import User
 from models.user_pattern import UserPattern
 from models.assoc_tables import project_needle, project_yarn, project_gauge
@@ -21,6 +22,7 @@ logger = logging.getLogger(__name__)
 
 class Project(Base):
     __tablename__ = "project"
+    __table_args__ = {"schema": os.environ.get("DB_SCHEMA", DEFAULT_DB_SCHEMA_NAME)}
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     title = Column(String(100), nullable=False)

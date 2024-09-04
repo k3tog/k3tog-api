@@ -1,5 +1,6 @@
 from datetime import datetime
 import logging
+import os
 
 from sqlalchemy import (
     BigInteger,
@@ -14,7 +15,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship, Session
 from sqlalchemy.dialects.postgresql import NUMRANGE
 
-from db.database import Base
+from db.database import DEFAULT_DB_SCHEMA_NAME, Base
 from models.user import User
 from models.assoc_tables import project_yarn
 
@@ -23,6 +24,7 @@ logger = logging.getLogger(__name__)
 
 class UserYarn(Base):
     __tablename__ = "user_yarn"
+    __table_args__ = {"schema": os.environ.get("DB_SCHEMA", DEFAULT_DB_SCHEMA_NAME)}
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     yarn_name = Column(String(300), nullable=False)

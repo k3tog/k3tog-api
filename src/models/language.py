@@ -1,4 +1,5 @@
 import logging
+import os
 
 from sqlalchemy import (
     BigInteger,
@@ -6,7 +7,7 @@ from sqlalchemy import (
     String,
 )
 from sqlalchemy.orm import Session
-from db.database import Base
+from db.database import DEFAULT_DB_SCHEMA_NAME, Base
 
 
 logger = logging.getLogger(__name__)
@@ -14,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 class Language(Base):
     __tablename__ = "language"
-    __table_args__ = {"schema": "k3tog"}
+    __table_args__ = {"schema": os.environ.get("DB_SCHEMA", DEFAULT_DB_SCHEMA_NAME)}
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)

@@ -1,4 +1,5 @@
 import logging
+import os
 
 from sqlalchemy import (
     BigInteger,
@@ -9,7 +10,7 @@ from sqlalchemy import (
     func,
 )
 from sqlalchemy.orm import Session
-from db.database import Base
+from db.database import DEFAULT_DB_SCHEMA_NAME, Base
 
 
 logger = logging.getLogger(__name__)
@@ -17,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 class PatternDocument(Base):
     __tablename__ = "pattern_document"
+    __table_args__ = {"schema": os.environ.get("DB_SCHEMA", DEFAULT_DB_SCHEMA_NAME)}
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     document_id = Column(String(100), nullable=False)
