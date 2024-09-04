@@ -1,5 +1,6 @@
 from datetime import datetime
 import logging
+import os
 
 from sqlalchemy import (
     BigInteger,
@@ -11,7 +12,7 @@ from sqlalchemy import (
     func,
 )
 from sqlalchemy.orm import relationship, Session
-from db.database import Base
+from db.database import DEFAULT_DB_SCHEMA_NAME, Base
 from models.user import User
 from models.assoc_tables import project_needle
 
@@ -21,6 +22,7 @@ logger = logging.getLogger(__name__)
 
 class UserNeedle(Base):
     __tablename__ = "user_needle"
+    __table_args__ = {"schema": os.environ.get("DB_SCHEMA", DEFAULT_DB_SCHEMA_NAME)}
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     name = Column(String(300), nullable=False)

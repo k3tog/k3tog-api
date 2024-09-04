@@ -1,17 +1,19 @@
 from datetime import datetime
 import logging
+import os
 from typing import List
 
 from sqlalchemy import BigInteger, Column, DateTime, String, func, Boolean, Integer
 from sqlalchemy.orm import Session
 
-from db.database import Base
+from db.database import DEFAULT_DB_SCHEMA_NAME, Base
 
 logger = logging.getLogger(__name__)
 
 
 class Photo(Base):
     __tablename__ = "photo"
+    __table_args__ = {"schema": os.environ.get("DB_SCHEMA", DEFAULT_DB_SCHEMA_NAME)}
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     photo_id = Column(String(100), nullable=False)

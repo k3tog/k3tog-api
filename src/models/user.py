@@ -1,4 +1,5 @@
 import logging
+import os
 
 from sqlalchemy import (
     BigInteger,
@@ -11,7 +12,7 @@ from sqlalchemy import (
     func,
 )
 from sqlalchemy.orm import relationship, backref, Session
-from db.database import Base
+from db.database import DEFAULT_DB_SCHEMA_NAME, Base
 from models.language import Language
 
 
@@ -20,6 +21,7 @@ logger = logging.getLogger(__name__)
 
 class User(Base):
     __tablename__ = "user"
+    __table_args__ = {"schema": os.environ.get("DB_SCHEMA", DEFAULT_DB_SCHEMA_NAME)}
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     external_id = Column(String(50), nullable=True, unique=True)
