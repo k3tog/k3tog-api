@@ -1,10 +1,9 @@
 import logging
 
-from services.utils import convert_datetime_to_unixtime
 from schemas.v1.project import ProjectV1
-from schemas.v1.user_pattern import UserPatternV1
 from services.user_yarn_manager import UserYarnManager
 from services.user_needle_manager import UserNeedleManager
+from services.user_pattern_manager import UserPatternManager
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +27,10 @@ class ProjectManager:
                 )
             )
 
+        user_pattern = UserPatternManager().convert_user_pattern_to_user_pattern_v1(
+            user_pattern=project.user_pattern
+        )
+
         return ProjectV1(
             id=project.id,
             title=project.title,
@@ -36,17 +39,7 @@ class ProjectManager:
             fo_date=project.fo_date.strftime("%B %d, %Y") if project.fo_date else None,
             size=project.size,
             note=project.note,
-            pattern=UserPatternV1(
-                id=project.user_pattern.id,
-                name=project.user_pattern.name,
-                author=project.user_pattern.author,
-                created_ts=convert_datetime_to_unixtime(
-                    project.user_pattern.created_ts
-                ),
-                updated_ts=convert_datetime_to_unixtime(
-                    project.user_pattern.updated_ts
-                ),
-            ),
+            pattern=user_pattern,
             yarns=user_yarns,
             needles=user_needles,
         )
