@@ -11,6 +11,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Session
 from db.database import DEFAULT_DB_SCHEMA_NAME, Base
+from models.user_pattern import UserPattern
 
 
 logger = logging.getLogger(__name__)
@@ -28,7 +29,7 @@ class PatternDocument(Base):
     deleted_ts = Column(DateTime, nullable=True)
 
     pattern_id = Column(
-        BigInteger, ForeignKey("user_pattern.id"), nullable=True
+        BigInteger, ForeignKey(UserPattern.id), nullable=True
     )  # Allow NULL pattern_id
 
     def __repr__(self):
