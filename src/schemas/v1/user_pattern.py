@@ -16,6 +16,6 @@ class UserPatternV1(BaseModel):
 
 class UserPatternCreateRequestInfoV1(BaseModel):
     name: str
-    author: Optional[str]
-    description: Optional[str]
-    pattern_document_id: Optional[str]
+    author: Optional[str] = None
+    description: Optional[str] = None
+    pattern_document_id: Optional[str] = None

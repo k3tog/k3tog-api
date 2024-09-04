@@ -3,6 +3,8 @@ from datetime import datetime
 from typing import Annotated, List
 
 from fastapi import APIRouter, HTTPException, Path, status
+from psycopg2.extras import NumericRange
+
 
 from routers.utils import APITags
 from schemas.v1.project import ProjectCreateRequestInfoV1, ProjectV1
@@ -13,6 +15,8 @@ from models.user_yarn import UserYarn
 from models.project import Project
 from models.user_needle import UserNeedle
 from services.project_manager import ProjectManager
+from models.photo import Photo
+from models.pattern_document import PatternDocument
 
 logger = logging.getLogger(__name__)
 
@@ -44,14 +48,14 @@ async def get_projects(
         # fetch all projects that the user owns
         projects = Project.get_projects_by_user_id(session=session, user_id=user.id)
 
-    project_info = []
-    project_manager = ProjectManager()
-    for project in projects:
-        project_info.append(
-            project_manager.convert_project_to_project_v1(project=project)
-        )
+        project_info = []
+        project_manager = ProjectManager()
+        for project in projects:
+            project_info.append(
+                project_manager.convert_project_to_project_v1(project=project)
+            )
 
-    return project_info
+        return project_info
 
 
 # `GET /v1/users/{username}/projects/{project_id}/`
@@ -80,8 +84,8 @@ async def get_project(
             session=session, project_id=project_id, user_id=user.id
         )
 
-    if project:
-        return ProjectManager().convert_project_to_project_v1(project=project)
+        if project:
+            return ProjectManager().convert_project_to_project_v1(project=project)
 
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND, detail="No project found"
@@ -109,41 +113,101 @@ async def create_project(
                 detail="Invalid username",
             )
 
-        user_pattern = UserPattern(
-            name=project_create_req.pattern.name,
-            author=project_create_req.pattern.author,
-            user_id=user.id,
-        )
-        session.add(user_pattern)
+        # if users selected existing pattern
+        if type(project_create_req.pattern) == int:
+            user_pattern = UserPattern.get_user_pattern_by_pattern_id_user_id(
+                session=session, pattern_id=project_create_req.pattern, user_id=user.id
+            )
+        else:
+            pattern_documents = []
+            if project_create_req.pattern.pattern_document_id:
+                pattern_document = PatternDocument.get_pattern_document_by_document_id(
+                    session=session,
+                    document_id=project_create_req.pattern.pattern_document_id,
+                )
+                pattern_documents = [pattern_document]
+
+            user_pattern = UserPattern(
+                name=project_create_req.pattern.name,
+                author=project_create_req.pattern.author,
+                description=project_create_req.pattern.description,
+                user_id=user.id,
+                pattern_documents=pattern_documents,
+            )
+            session.add(user_pattern)
 
         user_yarns = []
         for yarn in project_create_req.yarns:
-            user_yarn = UserYarn(
-                name=yarn.name,
-                color=yarn.color,
-                note=yarn.note,
-                num_used=yarn.num_used,
-                user_id=user.id,
-            )
-            session.add(user_yarn)
+            if type(yarn) == int:
+                user_yarn = UserYarn.get_user_yarn_by_yarn_id_user_id(
+                    session=session, yarn_id=yarn, user_id=user.id
+                )
+            else:
+                photos = Photo.get_photos_by_photo_ids(
+                    session=session, photo_ids=yarn.photo_ids
+                )
+                user_yarn = UserYarn(
+                    yarn_name=yarn.yarn_name,
+                    brand_name=yarn.brand_name,
+                    color=yarn.color,
+                    needle_range=NumericRange(
+                        yarn.needle_range_from,
+                        yarn.needle_range_to,
+                    ),
+                    hook_range=NumericRange(yarn.hook_range_from, yarn.hook_range_to),
+                    weight=yarn.weight,
+                    note=yarn.note,
+                    user_id=user.id,
+                )
+                session.add(user_yarn)
+                session.flush()
+
+                for photo in photos:
+                    photo.reference_id = user_yarn.id
+                    photo.type = "user_yarn"
+
             user_yarns.append(user_yarn)
 
         user_needles = []
         for needle in project_create_req.needles:
-            user_needle = UserNeedle(
-                name=needle.name,
-                size=needle.size,
-                note=needle.note,
-                user_id=user.id,
-            )
-            session.add(user_needle)
+            if type(needle) == int:
+                user_needle = UserNeedle.get_user_needle_by_needle_id_user_id(
+                    session=session, needle_id=needle, user_id=user.id
+                )
+            else:
+                photos = Photo.get_photos_by_photo_ids(
+                    session=session, photo_ids=needle.photo_ids
+                )
+                user_needle = UserNeedle(
+                    name=needle.name,
+                    size=needle.size,
+                    note=needle.note,
+                    user_id=user.id,
+                )
+                session.add(user_needle)
+                session.flush()
+
+                for photo in photos:
+                    photo.reference_id = user_needle.id
+                    photo.type = "user_needle"
+
             user_needles.append(user_needle)
+
+        # TODO(irene): add gauges
 
         project = Project(
             title=project_create_req.title,
             status=project_create_req.status,
-            co_date=datetime.strptime(project_create_req.co_date, "%Y-%m-%d"),
-            fo_date=datetime.strptime(project_create_req.fo_date, "%Y-%m-%d"),
+            co_date=(
+                datetime.strptime(project_create_req.co_date, "%Y-%m-%d")
+                if project_create_req.co_date
+                else None
+            ),
+            fo_date=(
+                datetime.strptime(project_create_req.fo_date, "%Y-%m-%d")
+                if project_create_req.fo_date
+                else None
+            ),
             size=project_create_req.size,
             note=project_create_req.note,
             user_pattern=user_pattern,

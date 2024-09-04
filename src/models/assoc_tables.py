@@ -19,6 +19,7 @@ project_needle = Table(
     Column("needle_id", BigInteger, ForeignKey(user_needle_id), primary_key=True),
     Column("created_ts", DateTime, server_default=func.now()),
     Column("updated_ts", DateTime, onupdate=func.now()),
+    schema=os.environ.get("DB_SCHEMA", DEFAULT_DB_SCHEMA_NAME),
 )
 
 project_yarn = Table(
@@ -29,6 +30,7 @@ project_yarn = Table(
     Column("created_ts", DateTime, server_default=func.now()),
     Column("updated_ts", DateTime, onupdate=func.now()),
     Column("num_used", Float),
+    schema=os.environ.get("DB_SCHEMA", DEFAULT_DB_SCHEMA_NAME),
 )
 
 project_gauge = Table(
@@ -38,4 +40,5 @@ project_gauge = Table(
     Column("gauge_id", BigInteger, ForeignKey(user_gauge_id), primary_key=True),
     Column("created_ts", DateTime, server_default=func.now()),
     Column("updated_ts", DateTime, onupdate=func.now()),
+    schema=os.environ.get("DB_SCHEMA", DEFAULT_DB_SCHEMA_NAME),
 )
