@@ -7,6 +7,7 @@ from schemas.v1.user_pattern import UserPatternCreateRequestInfoV1, UserPatternV
 from schemas.v1.user_yarn import UserYarnCreateRequestInfoV1, UserYarnV1
 from schemas.v1.user_needle import UserNeedleCreateRequestInfoV1, UserNeedleV1
 from schemas.v1.user_gauge import UserGaugeCreateRequestInfoV1
+from schemas.v1.photo import PhotoInfoV1
 
 
 class ProjectStatus(str, Enum):
@@ -26,6 +27,7 @@ class ProjectV1(BaseModel):
     yarns: Optional[List[UserYarnV1]] = []
     needles: Optional[List[UserNeedleV1]] = []
     note: Optional[str] = None
+    photos: Optional[List[PhotoInfoV1]] = []
 
 
 class ProjectCreateRequestInfoV1(BaseModel):
